@@ -1,0 +1,76 @@
+﻿@using System.Web.UI.WebControls
+@using PagedList.Mvc;
+@model PagedList.IPagedList<admin_mode.Models.ApplicationUser>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "Users";
+}
+<h2>Users</h2>
+ 
+<br/>
+@using (Html.BeginForm("Users", "AdminMainPage", FormMethod.Get))
+            {
+    <p>
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string,"string")
+        @*        <input type="submit" value="Search" />*@
+        @if (ViewBag.CurrentFilter != null)
+        {
+            @Html.ActionLink("Clear","Users",new { sortOrder = ViewBag.NameSortParm, currentFilter = "" })
+        }
+        
+        
+@*            @Html.ActionLink("Search","Users",new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })*@
+            @Html.ActionLink("Search", "Users", null, new { id = "send" })
+        
+    </p>
+}
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Users",
+    new { page, sortOrder = ViewBag.CurrentSort, searchString = ViewBag.CurrentFilter }))
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Email", "Users", new { sortOrder = ViewBag.NameSortParm, searchString = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Enrollment Date", "Users", new {sortOrder = ViewBag.DateSortParm, searchString = ViewBag.CurrentFilter})
+        </th>
+
+        <th>Action</th>
+    </tr>
+
+    @foreach (var usr in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(@usr.Email, "UserDetails", new { id = usr.Id })
+            </td>
+            <td>
+                @usr.EnrollmentDate.ToString()
+            </td>
+            <td>
+                @Html.ActionLink("Edit","Edit",new {id=2})
+                |
+                @Html.ActionLink("View Details", "UserDetails", new {id=usr.Id})
+            </td>
+        </tr>
+    }
+</table>
+
+
+<br />
+
+
+@section Scripts {
+    <script>
+        $(function() {
+            $('#send').click(function() {
+                var name = $('#SearchString').val();
+                this.href = this.href + '?SearchString=' + encodeURIComponent(name);
+            });
+        });
+    </script>
+}

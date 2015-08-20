@@ -1,0 +1,37 @@
+﻿@model Dictionary<string, object>
+
+@{
+    ViewBag.Title = "User Details";
+}
+
+<h2>User Details</h2>
+<br />
+@Html.ActionLink("Back to All Users", "Users", null, null)
+<br />
+
+<h4>User ID:</h4>
+<div class="row">
+    <div class="col-sm-4">
+        <ul class="list-unstyled icon-list checkmark">
+            <li>@Model["userId"].ToString();</li>
+        </ul>
+    </div>
+</div>
+<h4>User is in role(s):</h4>
+<div class="row">
+    <div class="col-sm-4">
+         
+            <ul class="list-unstyled icon-list checkmark">
+
+                @foreach (var role in (IList<string>)Model["UserRolesList"])
+                {
+                    <li>
+                        @role
+                        -
+                        @Html.Action("a","Account")
+                    </li>
+                }
+            </ul>
+        
+</div>
+</div>

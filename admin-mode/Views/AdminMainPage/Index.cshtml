@@ -1,0 +1,27 @@
+﻿@model admin_mode.Models.AdminMainPageModels
+
+@{
+    ViewBag.Title = "Admin Console";
+}
+
+<h2>Admin Console</h2>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Total Users
+        </dt>
+
+        <dd>
+        
+            @Html.DisplayFor( model => Model.TotalUsers )
+            
+            @Html.ActionLink("View All","Users","AdminMainPage") 
+        </dd>
+
+    </dl>
+</div>
+@*<p>*@
+@*    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |*@
+@*    @Html.ActionLink("Back to List", "Index")*@
+@*</p>*@
