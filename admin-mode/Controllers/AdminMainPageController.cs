@@ -184,7 +184,7 @@ namespace admin_mode.Controllers
                 {
                     Debug.WriteLine("sucess");
                 }
-                return RedirectToAction("Users");
+                return RedirectToAction("UserDetails", "AdminMainPage", new { id = id });
             }
             catch
             {
@@ -216,7 +216,7 @@ namespace admin_mode.Controllers
             var dictionary = new Dictionary<string,object>();
             dictionary.Add("selectlist",passingRolesList);
             dictionary.Add("id",id);
-            IEnumerable<SelectListItem> rolesienum = myIdentityManager.AllRolesToIenumSelectListItemsForuser(id);
+            IEnumerable<SelectListItem> rolesienum = myIdentityManager.AllRolesToIenumSelectListItemsForuser(id); 
             dictionary.Add("ienum", rolesienum);
             return View(dictionary);
 

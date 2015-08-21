@@ -237,7 +237,122 @@ namespace admin_mode.Migrations
                     EnrollmentDate = new DateTime(2013, 2, 11)
                 };
                 UserManager.Create(user12);
+
+            } 
+            
+            //user 13
+            if (!context.Users.Any(u => u.Email == "elefantas@zougla.qq"))
+            {
+                var user13 = new ApplicationUser
+                {
+                    Email = "elefantas@zougla.qq",
+                    UserName = "elefantas@zougla.qq",
+                    PasswordHash = PasswordHash.HashPassword("qqqqqq"),
+                    EnrollmentDate = new DateTime(2013, 4, 1)
+                };
+                UserManager.Create(user13);
+                UserManager.AddToRole(user13.Id, "User");
             }
+            
+            //user 14
+            if (!context.Users.Any(u => u.Email == "feidoulas@zougla.qq"))
+            {
+                var user14 = new ApplicationUser
+                {
+                    Email = "feidoulas@zougla.qq",
+                    UserName = "feidoulas@zougla.qq",
+                    PasswordHash = PasswordHash.HashPassword("qqqqqq"),
+                    EnrollmentDate = new DateTime(2013, 4, 1)
+                };
+                UserManager.Create(user14);
+                UserManager.AddToRole(user14.Id, "User");
+            }
+            
+            //user 15
+            if (!context.Users.Any(u => u.Email == "krokodeilos@zougla.qq"))
+            {
+                var user15 = new ApplicationUser
+                {
+                    Email = "krokodeilos@zougla.qq",
+                    UserName = "krokodeilos@zougla.qq",
+                    PasswordHash = PasswordHash.HashPassword("qqqqqq"),
+                    EnrollmentDate = new DateTime(2013, 4, 11)
+                };
+                UserManager.Create(user15);
+                UserManager.AddToRole(user15.Id, "User");
+            }
+            
+            //user 16
+            if (!context.Users.Any(u => u.Email == "vatraxos@zougla.qq"))
+            {
+                var user16 = new ApplicationUser
+                {
+                    Email = "vatraxos@zougla.qq",
+                    UserName = "vatraxos@zougla.qq",
+                    PasswordHash = PasswordHash.HashPassword("qqqqqq"),
+                    EnrollmentDate = new DateTime(2013, 6, 13)
+                };
+                UserManager.Create(user16);
+                UserManager.AddToRole(user16.Id, "User");
+            }
+            
+            //user 17
+            if (!context.Users.Any(u => u.Email == "ipopokampos@zougla.qq"))
+            {
+                var user17 = new ApplicationUser
+                {
+                    Email = "ipopokampos@zougla.qq",
+                    UserName = "ipopokampos@zougla.qq",
+                    PasswordHash = PasswordHash.HashPassword("qqqqqq"),
+                    EnrollmentDate = new DateTime(2013, 6, 13)
+                };
+                UserManager.Create(user17);
+                UserManager.AddToRole(user17.Id, "User");
+            }
+            
+            //user 18
+            if (!context.Users.Any(u => u.Email == "kampias@zougla.qq"))
+            {
+                var user18 = new ApplicationUser
+                {
+                    Email = "kampias@zougla.qq",
+                    UserName = "kampias@zougla.qq",
+                    PasswordHash = PasswordHash.HashPassword("qqqqqq"),
+                    EnrollmentDate = new DateTime(2013, 6, 13)
+                };
+                UserManager.Create(user18);
+                UserManager.AddToRole(user18.Id, "User");
+            }
+            
+            //user 19
+            if (!context.Users.Any(u => u.Email == "savras@zougla.qq"))
+            {
+                var user19 = new ApplicationUser
+                {
+                    Email = "savras@zougla.qq",
+                    UserName = "savras@zougla.qq",
+                    PasswordHash = PasswordHash.HashPassword("qqqqqq"),
+                    EnrollmentDate = new DateTime(2013, 6, 13)
+                };
+                UserManager.Create(user19);
+                UserManager.AddToRole(user19.Id, "User");
+            }
+            
+            //user 20
+            if (!context.Users.Any(u => u.Email == "papias@zougla.qq"))
+            {
+                var user20 = new ApplicationUser
+                {
+                    Email = "papias@zougla.qq",
+                    UserName = "papias@zougla.qq",
+                    PasswordHash = PasswordHash.HashPassword("qqqqqq"),
+                    EnrollmentDate = new DateTime(2013, 3, 23)
+                };
+                UserManager.Create(user20);
+                UserManager.AddToRole(user20.Id, "User");
+            }
+
+
         }
     }
 }

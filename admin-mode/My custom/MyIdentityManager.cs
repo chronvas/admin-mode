@@ -349,7 +349,7 @@ namespace admin_mode.My_custom
         /// <summary>
         /// //add the roles to ienum selectlistitem for a specific user, setting property disabled if the user ALREADY exists in that role
         /// </summary>
-        /// <returns></returns>
+        /// <returns>IEnumerable<SelectListItem></returns>
 
         public IEnumerable<SelectListItem> AllRolesToIenumSelectListItemsForuser(string id)
         {
