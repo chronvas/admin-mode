@@ -16,11 +16,12 @@
         @if (ViewBag.CurrentFilter != null)
         {
             @Html.ActionLink("Clear","Users",new { sortOrder = ViewBag.NameSortParm, currentFilter = "" })
+
         }
         
         
 @*            @Html.ActionLink("Search","Users",new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })*@
-            @Html.ActionLink("Search", "Users", null, new { id = "send" })
+            | @Html.ActionLink("Search", "Users", null, new { id = "send" })
         
     </p>
 }

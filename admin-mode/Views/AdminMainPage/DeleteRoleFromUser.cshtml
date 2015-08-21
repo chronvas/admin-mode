@@ -1,0 +1,27 @@
+﻿@using System.Drawing
+@model List<string>
+
+@{
+    ViewBag.Title = "DeleteRoleFromUser";
+}
+
+<h2>Delete Role from User</h2>
+<hr/>
+<div>
+    <h4>Are you sure you want to delete role:</h4>
+    <h2>@Model[1]</h2>
+    <h4> from user:</h4>
+    <h2>@Model[0] ?</h2>
+    <hr/>
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="DeleteRoleFromUser" class="btn btn-default"/> |
+            @Html.ActionLink("Back to List", "Users")
+        </div>
+    }
+</div>

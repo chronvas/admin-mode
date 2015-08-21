@@ -1,0 +1,46 @@
+﻿@using System.Collections
+@using System.Web.UI.WebControls
+@model Dictionary<string, object>
+@{
+    ViewBag.Title = "AddNewRoleToUser";
+}
+
+<h2>AddNewRoleToUser</h2>
+<hr />
+<div>
+    @{
+        string x = Model["id"].ToString();
+        List<SelectListItem> theList = (List<SelectListItem>) Model["selectlist"];
+        IEnumerable<SelectListItem> theListIenum = (IEnumerable<SelectListItem>) Model["ienum"];
+    }
+
+
+</div>
+ 
+@Html.ActionLink("Back to user","UserDetails", new {id=x})
+
+    @*@using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <div class="form-actions no-color">
+                    <div class="form-actions no-color">
+                        <input type="submit" value="AddNewRoleToUser" class="btn btn-default"/>
+                            @Html.ActionLink("Back to List", "Users")
+                    </div>
+                </div>
+            </div>
+
+        }*@
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.DropDownList("role", theListIenum, new { multiple = "multiple", size = 8 })
+        <div>
+            <button class="btn btn-primary " type="submit">
+                Add role
+            </button>
+        </div>
+    }

@@ -271,6 +271,8 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\AdminMainPage\Index.cshtml" />
     <Content Include="Views\AdminMainPage\UserDetails.cshtml" />
+    <Content Include="Views\AdminMainPage\DeleteRoleFromUser.cshtml" />
+    <Content Include="Views\AdminMainPage\AddNewRoleToUser.cshtml" />
     <None Include="Views\AdminMainPage\Users.cshtml" />
   </ItemGroup>
   <ItemGroup>

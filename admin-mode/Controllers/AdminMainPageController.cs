@@ -9,6 +9,9 @@ using System.Xml;
 using System.Xml.Serialization;
 using admin_mode.Models;
 using admin_mode.My_custom;
+using Microsoft.Ajax.Utilities;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using PagedList;
 namespace admin_mode.Controllers
 {
@@ -81,7 +84,7 @@ namespace admin_mode.Controllers
                 dictionary.Add("userId",user.Id);
                 dictionary.Add("UserRolesList",myIdentityManager.GetUserRoles(id));
                  
-            }catch (Exception e){}
+            }catch (Exception e){Debug.WriteLine(e);}
             if (dictionary.Count == 0) {  Debug.WriteLine("id wrong");return HttpNotFound("id wrong");}
 
             return View(dictionary);
@@ -153,26 +156,97 @@ namespace admin_mode.Controllers
             }
         }
 
-        // GET: AdminMainPage/Delete/5
-        public ActionResult Delete(int id)
+        // GET: AdminMainPage/DeleteRoleFromUser/5
+        [Authorize(Roles = "Global Admin")]
+        public ActionResult DeleteRoleFromUser(string id, string role)
         {
-            return View();
+            Debug.WriteLine("delete get");
+            Debug.WriteLine(id+"^"+role); 
+            if (id.IsNullOrWhiteSpace() || role.IsNullOrWhiteSpace()){return HttpNotFound("id and role incorrect");}
+            List<string> idandrole = new List<string>() {id,role};
+            return View(idandrole);
         }
 
-        // POST: AdminMainPage/Delete/5
+        // POST: AdminMainPage/DeleteRoleFromUser/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Global Admin")]
+        public ActionResult DeleteRoleFromUser(string id,string role, FormCollection collection)
         {
             try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+            { 
+                Debug.WriteLine("Delete requested"); 
+//                Debug.WriteLine("model data: "+m.Role+" "+m.UserId); 
+                Debug.WriteLine(id+"^"+role);
+                MyIdentityManager myIdentityManager = new MyIdentityManager();
+                var result = myIdentityManager.RemoveUserFromRole(id, role);
+                if (result.Succeeded)
+                {
+                    Debug.WriteLine("sucess");
+                }
+                return RedirectToAction("Users");
             }
             catch
             {
                 return View();
             }
         }
+
+        [Authorize(Roles = "Global Admin")]
+        //Get: AdminMainPage/AddNewRoleToUser
+        //it will present a list of available roles for the user to be added to \
+        public ActionResult AddNewRoleToUser(string id)
+        {
+            Debug.WriteLine("add new user to role requested, userid: "+id);
+
+            if (id.IsNullOrWhiteSpace() ) { return HttpNotFound("id and role incorrect"); }
+            
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+
+             
+            List<SelectListItem> passingRolesList = new List<SelectListItem>();
+            var allRoles = myIdentityManager.GetAllRoles();
+            if (allRoles.Count == 0){return HttpNotFound("No roles available. Create a New Role First!");}
+            foreach (var role in allRoles)
+            {
+                SelectListItem listItem = new SelectListItem() {Text = role.Name,Value = role.Name};
+                passingRolesList.Add(listItem);
+            }
+
+            var dictionary = new Dictionary<string,object>();
+            dictionary.Add("selectlist",passingRolesList);
+            dictionary.Add("id",id);
+            IEnumerable<SelectListItem> rolesienum = myIdentityManager.AllRolesToIenumSelectListItemsForuser(id);
+            dictionary.Add("ienum", rolesienum);
+            return View(dictionary);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Global Admin")]
+        public ActionResult AddNewRoleToUser(string id, string[] role, FormCollection collection)
+        {
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+
+            #region safety checks
+            if (role ==null) { return HttpNotFound("AddNewRoleToUser: Roles table zero"); }
+            foreach (var r in role){
+                if (r.IsNullOrWhiteSpace()) { return HttpNotFound("AddNewRoleToUser: a role in the roles table is null or whitespace");} 
+                //if role exists and we are not trying to add the user to an non existing role in the db
+                if (!myIdentityManager.RoleExist(r)) { return HttpNotFound("AddNewRoleToUser: a role in the roles table not found!"); }
+                //if user is already in this role
+                var user = myIdentityManager.SearchUserById(id);
+                if (myIdentityManager.IsUserInRole(r, user.UserName)) { return HttpNotFound("AddNewRoleToUser: user is already in a role you selected!"); }
+            }
+            #endregion
+            //add user to every role
+            var result = myIdentityManager.AddUserToRoles(id, role);
+            if (result == true)
+                return RedirectToAction("UserDetails","AdminMainPage",new {id=id});
+            return HttpNotFound("AddNewRoleToUser: Error addint role: " + role + " to user with id " + id);
+
+        }
+
     }
 }

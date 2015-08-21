@@ -32,6 +32,7 @@ namespace admin_mode.Models
         {
             return new ApplicationDbContext();
         }
+
         // commented out giati evgaze to error:
         //Multiple object sets per type are not supported.The object sets 'Identity Users' and 'Users' can both contain instances of type 'admin-mode.Models.ApplicationUser'.
         //public System.Data.Entity.DbSet<admin_mode.Models.ApplicationUser> ApplicationUsers { get; set; }

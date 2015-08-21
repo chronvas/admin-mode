@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Web;
+using System.Web.Mvc;
 using admin_mode.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -158,6 +160,12 @@ namespace admin_mode.My_custom
             return result.Succeeded;
         }
 
+        public bool AddUserToRoles(string userId, string[] roleNames)
+        {
+            var result = _userManager.AddToRoles(userId,roleNames);
+            return result.Succeeded;
+        }
+
         public IdentityResult RemoveUserFromRole(string userId, string role)
         {
             var result = _userManager.RemoveFromRole(userId, role);
@@ -211,6 +219,10 @@ namespace admin_mode.My_custom
         {
             var user = _userManager.FindByName(userName);
             return _userManager.IsInRole(user.Id, role);
+        }
+        public bool IsUserInRolebyId(string role, string id)
+        {
+            return _userManager.IsInRole(id, role);
         }
 
         public ApplicationUser GetUserByUserName(string username)
@@ -315,6 +327,48 @@ namespace admin_mode.My_custom
         {
             var usersFound = _dbContext.Users.Where(s => s.UserName.Contains(UsernameContains)).ToList();
             return usersFound;
+        }
+
+        public ApplicationUser SearchUserById(string IdContains)
+        {
+            var usersFound = _dbContext.Users.SingleOrDefault(s => s.Id==IdContains);
+            return usersFound;
+        }
+
+        public IEnumerable<SelectListItem> AllRolesToIenumSelectListItems()
+        {
+            List<SelectListItem> list = null;
+            var query = (from ca in _dbContext.Roles
+                         orderby ca.Name
+                         select new SelectListItem { Text = ca.Name, Value = ca.Name}).Distinct();
+            list = query.ToList();
+            Debug.WriteLine("-- Roles nu",list.Count);
+            return list;
+        }
+
+        /// <summary>
+        /// //add the roles to ienum selectlistitem for a specific user, setting property disabled if the user ALREADY exists in that role
+        /// </summary>
+        /// <returns></returns>
+
+        public IEnumerable<SelectListItem> AllRolesToIenumSelectListItemsForuser(string id)
+        {
+            List<SelectListItem> list = null;
+            var query = (from ca in _dbContext.Roles
+                         orderby ca.Name
+                         select new SelectListItem { Text = ca.Name, Value = ca.Name }).Distinct();
+            list = query.ToList();
+
+            
+            foreach (var item in list)
+            {
+                if (IsUserInRolebyId(item.Value, id))
+                {
+                    item.Disabled = true;
+                }
+            }
+            Debug.WriteLine("-- Roles nu", list.Count);
+            return list;
         }
     }
 }
