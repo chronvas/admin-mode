@@ -32,9 +32,10 @@ namespace admin_mode.Controllers
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "email_desc" : "";
             ViewBag.DateSortParm = sortOrder == "date" ? "date_desc" : "date";
-//            if (searchString != null) { page = 1; } //if searchstring is something, return to page 1
-//            else { searchString = currentFilter; }  //if searchstring is null, make it equal to currentfilter
-            
+            ViewBag.UsernameSortParam = sortOrder == "username" ? "username_desc" : "username";
+            //            if (searchString != null) { page = 1; } //if searchstring is something, return to page 1
+            //            else { searchString = currentFilter; }  //if searchstring is null, make it equal to currentfilter
+
             ViewBag.CurrentFilter = searchString;
             ApplicationDbContext db = new ApplicationDbContext();
             var users = from s in db.Users
@@ -54,6 +55,12 @@ namespace admin_mode.Controllers
                     break;
                 case "date_desc":
                     users = users.OrderByDescending(s => s.EnrollmentDate);
+                    break;
+                case "username":
+                    users = users.OrderByDescending(s => s.UserName);
+                    break;
+                case "username_desc":
+                    users = users.OrderBy(s => s.UserName);
                     break;
                 default:
                     users = users.OrderBy(s => s.Email);
@@ -132,13 +139,45 @@ namespace admin_mode.Controllers
             }
         }
 
-        // GET: AdminMainPage/Edit/5
-        public ActionResult Edit(int id)
+        [Authorize(Roles = "Global Admin")]
+        // GET: AdminMainPage/UserEdit/5
+        public ActionResult UserEdit(string id)
         {
-            
-            return View();
-            
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+            var user = myIdentityManager.SearchUserById(id);
+            return View(user);
         }
+        
+        [HttpPost]
+        [Authorize(Roles = "Global Admin")]
+        [ValidateAntiForgeryToken]
+        //Caution! singe this method is called by Global Admin, NO Checks suck as email validity or so are made before update!
+        // POST: AdminMainPage/UserEdit/5
+        public ActionResult UserEdit(string id, ApplicationUser applicationUser)
+        {
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+
+            //var adsada = applicationUser.Email; //dinei nea timi
+            //var newEmail = Request.Form["Email"]; //doulevei nea timi
+            //myIdentityManager.SearchUserById(id).Email = form.GetValue("Email").AttemptedValue;  //doulevei nea timi
+
+            //string value = Convert.ToString(form["Email"]); //doulevei nea timi
+            var user = myIdentityManager.SearchUserById(id);
+            
+            
+            user.EnrollmentDate = applicationUser.EnrollmentDate;
+            user.Email = applicationUser.Email;
+            user.EmailConfirmed = applicationUser.EmailConfirmed;
+            user.PhoneNumber = applicationUser.PhoneNumber;
+            user.PhoneNumberConfirmed = applicationUser.PhoneNumberConfirmed;
+            user.TwoFactorEnabled = applicationUser.TwoFactorEnabled;
+            user.LockoutEnabled = applicationUser.LockoutEnabled;
+            user.AccessFailedCount = applicationUser.AccessFailedCount;
+            user.UserName = applicationUser.UserName;
+            myIdentityManager.UpdateUser(user);
+            return RedirectToAction("Users");
+        }
+         
 
         // POST: AdminMainPage/Edit/5
         [HttpPost]

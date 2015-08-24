@@ -1,4 +1,5 @@
-﻿@using System.Web.UI.WebControls
+﻿@using System.Globalization
+@using System.Web.UI.WebControls
 @using PagedList.Mvc;
 @model PagedList.IPagedList<admin_mode.Models.ApplicationUser>
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
@@ -37,9 +38,11 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
             @Html.ActionLink("Email", "Users", new { sortOrder = ViewBag.NameSortParm, searchString = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("Enrollment Date", "Users", new {sortOrder = ViewBag.DateSortParm, searchString = ViewBag.CurrentFilter})
+            @Html.ActionLink("Username", "Users", new {sortOrder = ViewBag.UsernameSortParam, searchString = ViewBag.CurrentFilter})
         </th>
-
+        <th>
+            @Html.ActionLink("Enrollment Date", "Users", new { sortOrder = ViewBag.DateSortParm, searchString = ViewBag.CurrentFilter })
+        </th>
         <th>Action</th>
     </tr>
 
@@ -47,13 +50,16 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
     {
         <tr>
             <td>
-                @Html.ActionLink(@usr.Email, "UserDetails", new { id = usr.Id })
+                @Html.ActionLink(@usr.Email, "UserDetails", new {id = usr.Id})
             </td>
             <td>
-                @usr.EnrollmentDate.ToString()
+                @usr.UserName
             </td>
             <td>
-                @Html.ActionLink("Edit","Edit",new {id=2})
+                @usr.EnrollmentDate.ToString(CultureInfo.CurrentCulture)
+            </td>
+            <td>
+                @Html.ActionLink("Edit","UserEdit",new {id= usr.Id })
                 |
                 @Html.ActionLink("View Details", "UserDetails", new {id=usr.Id})
             </td>
