@@ -4,13 +4,10 @@
     ViewBag.Title = "UserEditView";
 }
 
-@Scripts.Render("~/bundles/bootstrap")
+ 
+@Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/bootstrap-switch")
-@Scripts.Render("~/bundles/bootstrap-switchmin")
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/jqueryunobtrusive-ajax")
-@Scripts.Render("~/bundles/jqueryunobtrusive-ajaxmin")
-@Scripts.Render("~/bundles/jquery")
+
 
 <h2>UserEditView</h2>
 <div class="glyphicon-alert text-danger">
@@ -150,25 +147,12 @@
 <div>
     @Html.ActionLink("Back to List", "Users")
 </div>
+ 
 
-<input type="checkbox" name="my-checkbox" checked>
-<input type="checkbox" name="my-checkbox" checked>
-<input type="checkbox" name="my-checkbox" checked>
-<input type="checkbox" name="my-checkbox" checked>
-<input type="checkbox" name="my-checkbox" checked>
-<input type="checkbox" name="my-checkbox" checked>
-<input type="checkbox" name="my-checkbox" checked>
-<div>
-    <input class="form-control" type="checkbox" checked>
-</div>
-<div>
-    <input type="checkbox" checked>
-</div>
-
-<script>
-    $(function (argument) {
-        $('[type="checkbox"]').bootstrapSwitch();
-    })
-
-
-</script>
+@section scripts{
+    <script>
+        $(function(argument) { 
+            $('[type="checkbox"]').bootstrapSwitch();
+        })
+        </script> 
+}
