@@ -4,7 +4,8 @@
 @{
     ViewBag.Title = "AddNewRoleToUser";
 }
-
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap-multiselect")
 <h2>AddNewRoleToUser</h2>
 <hr />
 <div>
@@ -44,3 +45,14 @@
             </button>
         </div>
     }
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#role').multiselect(); 
+        });
+
+    </script>
+}

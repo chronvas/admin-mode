@@ -27,6 +27,12 @@ namespace admin_mode
             bundles.Add(new ScriptBundle("~/bundles/bootstrap-switchmin").Include(
                                     "~/Scripts/bootstrap-switch.min.js*"));
 
+            //bootstrap multiselect
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap-multiselect").Include(
+                        "~/Scripts/bootstrap-multiselect.js",
+                        "~/Scripts/bootstrap-multiselect-collapsible-groups"
+                        ));
+
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
@@ -40,7 +46,9 @@ namespace admin_mode
                       "~/Content/bootstrap.css",
                       "~/Content/gpyphed-icon-list.css",
                       "~/Content/bootstrap-switch/bootstrap3/bootstrap-switch.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/bootstrap-multiselect.css" 
+                      ));
         }
     }
 }
