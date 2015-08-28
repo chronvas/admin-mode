@@ -1,0 +1,126 @@
+﻿@using System.Globalization
+@using System.Web.UI.WebControls
+@using PagedList.Mvc;
+@model PagedList.IPagedList<admin_mode.Models.ApplicationUser>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "Users 2";
+}
+
+@Scripts.Render("~/bundles/modalform")
+<br />
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading text-center"><span class="badge"></span>Users</div>
+
+    <div class="panel-body ">
+        @using (Html.BeginForm("Users2", "AdminMainPage", FormMethod.Get))
+        {
+            @* // Search field, Search and Clear buttons*@
+            <p>
+                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, "string")
+                @*        <input type="submit" value="Search" />*@
+                @if (ViewBag.CurrentFilter != null)
+                {
+                    @Html.ActionLink("Clear", "Users2", new { sortOrder = ViewBag.NameSortParm, currentFilter = "" })
+                }@*            @Html.ActionLink("Search","Users",new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })*@| @Html.ActionLink("Search", "Users2", null, new { id = "send" })
+                <div class="text-warning">@Model.TotalItemCount results</div>
+            </p>
+        }
+
+
+    </div>
+
+
+
+
+
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>
+                @Html.ActionLink("Email", "Users2", new { sortOrder = ViewBag.NameSortParm, searchString = ViewBag.CurrentFilter })
+            </th>
+            <th>
+                @Html.ActionLink("Username", "Users2", new { sortOrder = ViewBag.UsernameSortParam, searchString = ViewBag.CurrentFilter })
+            </th>
+            <th>
+                @Html.ActionLink("Enrollment Date", "Users2", new { sortOrder = ViewBag.DateSortParm, searchString = ViewBag.CurrentFilter })
+            </th>
+            <th>Action</th>
+        </tr>
+
+        @foreach (var usr in Model)
+            {
+            <tr>
+                <td>
+                    @Html.ActionLink(@usr.Email, "UserDetails", new { id = usr.Id })
+                </td>
+                <td>
+                    @usr.UserName
+                </td>
+                <td>
+                    @usr.EnrollmentDate.ToString(CultureInfo.CurrentCulture)
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-xs dropdown-toggle"
+                                data-toggle="dropdown" data-hover="dropdown"
+                                data-delay="5000" data-close-others="true">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+
+
+                        <ul class="dropdown-menu" role="menu">
+                            <li>@Html.ActionLink("Edit User", "UserEdit2", new { id = usr.Id }, 
+                                            new { data_modal = "" })</li>
+                            <li>@Html.ActionLink("Edit Roles", "AddNewRoleToUser2", new {id = usr.Id}, 
+                                            new {data_modal = ""})</li>
+                        </ul>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-xs dropdown-toggle"
+                                data-toggle="dropdown" data-hover="dropdown"
+                                data-delay="5000" data-close-others="true">
+                            <span class="glyphicon   glyphicon-user"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>@Html.ActionLink("View Details", "UserDetails", new { id = usr.Id })</li>
+                        </ul>
+                    </div>
+
+                </td>
+
+            </tr>
+        }
+    </table>
+
+
+    <div class="panel-footer">
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+        @Html.PagedListPager(Model, page => Url.Action("Users2",
+    new { page, sortOrder = ViewBag.CurrentSort, searchString = ViewBag.CurrentFilter }))
+    </div>
+
+</div>
+<br />
+@section scripts{
+    <script>
+        $(function () {
+            $('#send').click(function () {
+                var name = $('#SearchString').val();
+                this.href = this.href + '?SearchString=' + encodeURIComponent(name);
+            });
+        });
+
+    </script>
+
+}

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Mime;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml;
@@ -13,6 +16,7 @@ using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using PagedList;
+
 namespace admin_mode.Controllers
 {
     public class AdminMainPageController : Controller
@@ -72,6 +76,53 @@ namespace admin_mode.Controllers
             //return View(users.ToList());
         }
 
+        [Authorize(Roles = "Global Admin")]
+        public ActionResult Users2(string sortOrder, string currentFilter, string searchString, int? page)
+        {
+            //if (!User.IsInRole("Global Admin")) {  return HttpNotFound();}
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "email_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "date" ? "date_desc" : "date";
+            ViewBag.UsernameSortParam = sortOrder == "username" ? "username_desc" : "username";
+            //            if (searchString != null) { page = 1; } //if searchstring is something, return to page 1
+            //            else { searchString = currentFilter; }  //if searchstring is null, make it equal to currentfilter
+
+            ViewBag.CurrentFilter = searchString;
+            ApplicationDbContext db = new ApplicationDbContext();
+            var users = from s in db.Users
+                        select s;
+            if (!String.IsNullOrEmpty(searchString))
+            { //search in emails and usernames
+                users = users.Where(s => s.Email.Contains(searchString)
+                                        || s.UserName.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "email_desc":
+                    users = users.OrderByDescending(s => s.Email);
+                    break;
+                case "date":
+                    users = users.OrderBy(s => s.EnrollmentDate);
+                    break;
+                case "date_desc":
+                    users = users.OrderByDescending(s => s.EnrollmentDate);
+                    break;
+                case "username":
+                    users = users.OrderByDescending(s => s.UserName);
+                    break;
+                case "username_desc":
+                    users = users.OrderBy(s => s.UserName);
+                    break;
+                default:
+                    users = users.OrderBy(s => s.Email);
+                    break;
+            }
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+            return View(users.ToPagedList(pageNumber, pageSize));
+            //return View(users.ToList());
+        }
+
         // GET: AdminMainPage/User/5 
         [Authorize(Roles = "Global Admin")]
         public ActionResult UserDetails(string id)
@@ -88,7 +139,7 @@ namespace admin_mode.Controllers
             //ad what we need to the dictionary
             try
             {
-                dictionary.Add("userId",user.Id);
+                dictionary.Add("user",user);
                 dictionary.Add("UserRolesList",myIdentityManager.GetUserRoles(id));
                  
             }catch (Exception e){Debug.WriteLine(e);}
@@ -139,8 +190,8 @@ namespace admin_mode.Controllers
             }
         }
 
-        [Authorize(Roles = "Global Admin")]
         // GET: AdminMainPage/UserEdit/5
+        [Authorize(Roles = "Global Admin")]
         public ActionResult UserEdit(string id)
         {
             MyIdentityManager myIdentityManager = new MyIdentityManager();
@@ -179,21 +230,7 @@ namespace admin_mode.Controllers
         }
          
 
-        // POST: AdminMainPage/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
         // GET: AdminMainPage/DeleteRoleFromUser/5
         [Authorize(Roles = "Global Admin")]
@@ -287,5 +324,129 @@ namespace admin_mode.Controllers
 
         }
 
+
+
+        // GET: AdminMainPage/UserEdit2/5
+        [Authorize(Roles = "Global Admin")]
+        public async Task<ActionResult> UserEdit2(string id)
+        {
+            if (id.IsNullOrWhiteSpace())
+            {
+                return HttpNotFound("id IsNullOrWhiteSpace!");
+            }
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+            ApplicationUser user = null;
+            try
+            {
+                user = myIdentityManager.GetUserByIdentityUserId(id);
+            }
+            catch (Exception e)
+            {
+                return HttpNotFound("user not found!!"+e);
+            }
+            
+            
+            return PartialView("UserEdit2", user);
+        }
+
+        // POST: AdminMainPage/UserEdit2/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Global Admin")]
+        public async Task<ActionResult> UserEdit2([Bind(Include = "EnrollmentDate,Email,Id,EmailConfirmed,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnabled,AccessFailedCount,UserName")] ApplicationUser applicationUser)
+        {
+            if (ModelState.IsValid)
+            {
+                MyIdentityManager myIdentityManager = new MyIdentityManager();
+                //get the user based on the id
+                var userEdited = myIdentityManager.SearchUserById(applicationUser.Id);
+                var userEdited2 = myIdentityManager.GetUserByIdentityUserId(applicationUser.Id);
+                 
+
+
+                userEdited.EnrollmentDate = applicationUser.EnrollmentDate;
+                userEdited.Email = applicationUser.Email;
+                userEdited.EmailConfirmed = applicationUser.EmailConfirmed;
+                userEdited.PhoneNumber = applicationUser.PhoneNumber;
+                userEdited.PhoneNumberConfirmed = applicationUser.PhoneNumberConfirmed;
+                userEdited.TwoFactorEnabled = applicationUser.TwoFactorEnabled;
+                userEdited.LockoutEnabled = applicationUser.LockoutEnabled;
+                userEdited.AccessFailedCount = applicationUser.AccessFailedCount;
+                userEdited.UserName = applicationUser.UserName;
+                var userEditResult = myIdentityManager.UpdateUser(userEdited);
+
+                if (!userEditResult.Succeeded)
+                {
+                    return HttpNotFound("not updated");
+                }
+
+
+                return Json(new { success = true });
+            }
+            return PartialView("Users2");
+        }
+
+
+        [Authorize(Roles = "Global Admin")]
+        //GET: AdminMainPage/AddNewRoleToUser2
+        //it will present a list of available roles for the user to be added to \
+        public  ActionResult  AddNewRoleToUser2(string id)
+        {
+            if (id.IsNullOrWhiteSpace()) { return HttpNotFound("id and role incorrect"); }
+
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+
+
+            List<SelectListItem> passingRolesList = new List<SelectListItem>();
+            var allRoles = myIdentityManager.GetAllRoles();
+            if (allRoles.Count == 0) { return HttpNotFound("No roles available. Create a New Role First!"); }
+            foreach (var role in allRoles)
+            {
+                SelectListItem listItem = new SelectListItem() { Text = role.Name, Value = role.Name };
+                passingRolesList.Add(listItem);
+            }
+
+            var dictionary = new Dictionary<string, object>();
+            dictionary.Add("selectlist", passingRolesList);
+            dictionary.Add("id", id);
+            IEnumerable<SelectListItem> rolesienum = myIdentityManager.AllRolesToIenumSelectListItemsForuser(id);
+            dictionary.Add("ienum", rolesienum);
+            Debug.WriteLine(dictionary.Count);
+            return PartialView("AddNewRoleToUser2", dictionary);
+
+        }
+
+        //POST: AdminMainPage/AddNewRoleToUser2
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Global Admin")]
+        public ActionResult AddNewRoleToUser2(string id, string[] role, FormCollection collection)
+        {
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+
+            #region safety checks
+            if (role == null) { return HttpNotFound("AddNewRoleToUser: Roles table zero"); }
+            foreach (var r in role)
+            {
+                if (r.IsNullOrWhiteSpace()) { return HttpNotFound("AddNewRoleToUser: a role in the roles table is null or whitespace"); }
+                //if role exists and we are not trying to add the user to an non existing role in the db
+                if (!myIdentityManager.RoleExist(r)) { return HttpNotFound("AddNewRoleToUser: a role in the roles table not found!"); }
+                //if user is already in this role
+                var user = myIdentityManager.SearchUserById(id);
+                if (myIdentityManager.IsUserInRole(r, user.UserName)) { return HttpNotFound("AddNewRoleToUser: user is already in a role you selected!"); }
+            }
+            #endregion
+            //add user to every role
+            var result = myIdentityManager.AddUserToRoles(id, role);
+            if (result == true)
+            {
+                TempData["Success"] = true;
+                return RedirectToAction("UserDetails", "AdminMainPage", new {id = id});
+            }
+            return HttpNotFound("AddNewRoleToUser: Error addint role: " + role + " to user with id " + id);
+
+        }
     }
 }

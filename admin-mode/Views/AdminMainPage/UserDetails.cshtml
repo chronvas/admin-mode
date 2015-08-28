@@ -1,41 +1,59 @@
-﻿@model Dictionary<string, object>
+﻿@using admin_mode.Models
+@model Dictionary<string, object>
 
 @{
     ViewBag.Title = "User Details";
 }
- 
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Person Details</h4>
+</div>
+
 <h2>User Details</h2>
 <br />
 @Html.ActionLink("Back to All Users", "Users", null, null)
 <br />
+@{ApplicationUser user = (ApplicationUser) Model["user"];}
 
-<h4>User ID:</h4>
-<div class="row">
-    <div class="col-sm-10">
-        <ul class="list-unstyled icon-list checkmark">
-            <li>@Model["userId"].ToString()</li>
-        </ul>
-    </div>
-</div>
-<h4>User is in role(s):</h4>
-<div class="row">
-    <div class="col-sm-4">
 
-        <ul class="list-unstyled icon-list checkmark">
-
-            @foreach (var role in (IList<string>) Model["UserRolesList"])
-            {
-                <li>
-                    @role
-                    -
-                    @Html.ActionLink("Delete", "DeleteRoleFromUser", new {id = @Model["userId"].ToString(), role = role})
-                </li>
-            }
-        </ul>
+<div class="modal-body">
+    <dl class="dl-horizontal">
+        <dt>
+            ID
+        </dt>
+        <dd>
+            @user.Id
+        </dd>
         
-
-        @Html.ActionLink("Add Role", "AddNewRoleToUser", new { id = @Model["userId"].ToString()  })
-
+        <dt>
+            Email
+        </dt>
+        <dd>
+            @user.Email
+        </dd>
         
+        <dt>User is in role(s):</dt>
+        <dd></dd>
+        @foreach (var role in (IList<string>) Model["UserRolesList"])
+        {
+            <dt>
+                @role
+            </dt>
+            <dd>
+                @Html.ActionLink("Delete", "DeleteRoleFromUser", new {id = user.Id, role = role})
+            </dd>
+
+        }
+    
+    </dl>
+    
 </div>
+
+<div class="modal-footer">
+    <button class="btn" data-dismiss="modal">Ok</button>
 </div>
+<br/>
+<br/>
+<br/>
+<br/>

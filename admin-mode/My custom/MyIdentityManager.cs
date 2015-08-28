@@ -121,7 +121,14 @@ namespace admin_mode.My_custom
 
         public ApplicationUser GetUserByIdentityUserId(string userId)
         {
-            return _userManager.FindById(userId);
+            var ret = _userManager.FindById(userId);
+            return ret;
+        }
+
+        public ApplicationUser SearchUserById(string IdContains)
+        {
+            var usersFound = _dbContext.Users.SingleOrDefault(s => s.Id == IdContains);
+            return usersFound;
         }
         public IdentityResult CreateNewUser(ApplicationUser user, string password)
         {
@@ -151,7 +158,9 @@ namespace admin_mode.My_custom
 
         public IdentityResult UpdateUser(ApplicationUser user)
         {
-            return _userManager.Update(user);
+            var ret = _userManager.Update(user);
+            return ret;
+
         }
 
         public bool AddUserToRole(string userId, string roleName)
@@ -329,11 +338,7 @@ namespace admin_mode.My_custom
             return usersFound;
         }
 
-        public ApplicationUser SearchUserById(string IdContains)
-        {
-            var usersFound = _dbContext.Users.SingleOrDefault(s => s.Id==IdContains);
-            return usersFound;
-        }
+
 
         public IEnumerable<SelectListItem> AllRolesToIenumSelectListItems()
         {
@@ -367,7 +372,7 @@ namespace admin_mode.My_custom
                     item.Disabled = true;
                 }
             }
-            Debug.WriteLine("-- Roles nu", list.Count);
+            Debug.WriteLine("-- Roles nu "+ list.Count);
             return list;
         }
     }
