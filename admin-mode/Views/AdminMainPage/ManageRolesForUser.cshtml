@@ -2,13 +2,11 @@
 @using System.Web.UI.WebControls
 @model Dictionary<string, object>
  
- 
 @{
     string id = Model["id"].ToString();
     List<SelectListItem> theList = (List<SelectListItem>)Model["selectlist"];
     IEnumerable<SelectListItem> theListIenum = (IEnumerable<SelectListItem>)Model["ienum"];
 }
- 
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -18,7 +16,6 @@
 @using (Html.BeginForm())
 {
     <div class="form-horizontal modal-body">
-        XXxxxXX
         @Html.AntiForgeryToken()
         @Html.DropDownList("role", theListIenum, new {multiple = "multiple", size = 8,type="role"})
         

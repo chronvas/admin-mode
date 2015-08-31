@@ -31,16 +31,26 @@
                 @*        <input type="submit" value="Search" />*@
                 @if (ViewBag.CurrentFilter != null)
                 {
-                    @Html.ActionLink("Clear", "Users2", new { sortOrder = ViewBag.NameSortParm, currentFilter = "" })
-                }@*            @Html.ActionLink("Search","Users",new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })*@| @Html.ActionLink("Search", "Users2", null, new { id = "send" })
+                    @Html.ActionLink("Clear", "Users2", new {sortOrder = ViewBag.NameSortParm, currentFilter = ""})
+                }@*            @Html.ActionLink("Search","Users",new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })*@| @Html.ActionLink("Search", "Users2", null, new {id = "send"})
+
+
+                <div>  
+                @{  //actionlink made to button with bootstrap icon inside the button
+                    //apo http://stackoverflow.com/questions/1547097/asp-net-mvc-how-to-include-span-in-link-from-html-actionlink
+                    //
+                    var link2 = Html.ActionLink("{0}", "AddUser", null, new { id = "AddUser", @class = "btn btn-sm bg-primary pull-right", data_modal = "" });
+                    var link2S = link2.ToString();
+                    var url2 = string.Format(link2S, "<span class=\"glyphicon glyphicon-plus\"> </span>   New User  ");
+                }
+                @Html.Raw(url2)
+                </div>
                 <div class="text-warning">@Model.TotalItemCount results</div>
+
+
             </p>
         }
-
-
     </div>
-
-
 
 
 
@@ -92,9 +102,11 @@
                             <span class="glyphicon   glyphicon-user"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li>@Html.ActionLink("View Details", "UserDetails", new { id = usr.Id })</li>
+                            <li>@Html.ActionLink("View Details", "UserDetails", new {id = usr.Id})</li>
                         </ul>
                     </div>
+                    
+                    
 
                 </td>
 

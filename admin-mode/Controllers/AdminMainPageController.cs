@@ -487,14 +487,39 @@ namespace admin_mode.Controllers
         }
 
         //GET: AdminMainPage/AddUser
-        public ActionResult AddUser()
+        public async Task<ActionResult> AddUser()
         {
-            MyIdentityManager myIdentityManager = new MyIdentityManager();
-            ApplicationUser user = new ApplicationUser();
-            user.Id = Guid.NewGuid().ToString();
-            myIdentityManager.CreateNewUser(user, "qqqqqq");
+
             return PartialView();
         }
 
+        [HttpPost]
+        public async Task<ActionResult> AddUser(
+            [Bind(
+                Include =
+                    "EnrollmentDate,Email,Id,EmailConfirmed,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnabled,AccessFailedCount,UserName"
+                )] ApplicationUser applicationUser)
+        {
+            // id system
+            //
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+
+            ApplicationUser newUser = new ApplicationUser();
+
+            newUser.EnrollmentDate = Convert.ToDateTime("2/2/2002");
+            newUser.Email = "testtest@testtest.tes";
+            newUser.EmailConfirmed = true;
+            //newUser.PhoneNumber = applicationUser.PhoneNumber;
+            //newUser.PhoneNumberConfirmed = applicationUser.PhoneNumberConfirmed;
+            //newUser.TwoFactorEnabled = applicationUser.TwoFactorEnabled;
+            newUser.LockoutEnabled = false;
+            //newUser.AccessFailedCount = applicationUser.AccessFailedCount;
+            newUser.UserName = "testtest@testtest.tes";
+            //password
+            var PasswordHash = new PasswordHasher();
+            var hp = PasswordHash.HashPassword("qqqqqq");
+            myIdentityManager.CreateNewUser(newUser, hp);
+            return Json(new { success = true });
+        }
     }
 }
