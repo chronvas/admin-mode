@@ -78,7 +78,7 @@ namespace admin_mode.Controllers
 
         [Authorize(Roles = "Global Admin")]
         public ActionResult Users2(string sortOrder, string currentFilter, string searchString, int? page)
-        {
+        { 
             //if (!User.IsInRole("Global Admin")) {  return HttpNotFound();}
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "email_desc" : "";
@@ -148,12 +148,6 @@ namespace admin_mode.Controllers
             return View(dictionary);
         }
 
-        // GET: AdminMainPage/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
 
         // GET: AdminMainPage/UsersToXml
         [Route("UsersToXml")] 
@@ -174,21 +168,6 @@ namespace admin_mode.Controllers
             return Content(xml, "text/xml");
         } 
 
-        // POST: AdminMainPage/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
         // GET: AdminMainPage/UserEdit/5
         [Authorize(Roles = "Global Admin")]
@@ -265,7 +244,7 @@ namespace admin_mode.Controllers
             catch
             {
                 return View();
-            }
+            }   
         }
 
         [Authorize(Roles = "Global Admin")]
@@ -295,7 +274,6 @@ namespace admin_mode.Controllers
             IEnumerable<SelectListItem> rolesienum = myIdentityManager.AllRolesToIenumSelectListItemsForuser(id); 
             dictionary.Add("ienum", rolesienum);
             return View(dictionary);
-
         }
 
         [HttpPost]
@@ -335,7 +313,7 @@ namespace admin_mode.Controllers
                 return HttpNotFound("id IsNullOrWhiteSpace!");
             }
             MyIdentityManager myIdentityManager = new MyIdentityManager();
-            ApplicationUser user = null;
+            ApplicationUser user;
             try
             {
                 user = myIdentityManager.GetUserByIdentityUserId(id);
@@ -362,7 +340,6 @@ namespace admin_mode.Controllers
                 MyIdentityManager myIdentityManager = new MyIdentityManager();
                 //get the user based on the id
                 var userEdited = myIdentityManager.SearchUserById(applicationUser.Id);
-                var userEdited2 = myIdentityManager.GetUserByIdentityUserId(applicationUser.Id);
                  
 
 
@@ -422,7 +399,7 @@ namespace admin_mode.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Global Admin")]
-        public ActionResult AddNewRoleToUser2(string id, string[] role, FormCollection collection)
+        public async Task<ActionResult> AddNewRoleToUser2(string id, string[] role, FormCollection collection)
         {
             MyIdentityManager myIdentityManager = new MyIdentityManager();
 
@@ -443,10 +420,81 @@ namespace admin_mode.Controllers
             if (result == true)
             {
                 TempData["Success"] = true;
-                return RedirectToAction("UserDetails", "AdminMainPage", new {id = id});
+                
+                //return RedirectToAction("Us", "AdminMainPage", new {id = id});
             }
             return HttpNotFound("AddNewRoleToUser: Error addint role: " + role + " to user with id " + id);
 
         }
+
+        [Authorize(Roles = "Global Admin")]
+        //Get: AdminMainPage/ManageRolesForUser
+        //it will manage the roles. 
+        //presenting the previous roles, user selects new roles, ALL previous roles dropped, and all user selected roles added
+        public ActionResult ManageRolesForUser(string id)
+        {
+            if (id.IsNullOrWhiteSpace()) { return HttpNotFound("id null or whitespace"); }
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+
+            List<SelectListItem> passingRolesList = new List<SelectListItem>();
+            var allRoles = myIdentityManager.GetAllRoles();
+            if (allRoles.Count == 0) { return HttpNotFound("No roles available in the system. Create a New Role First!"); }
+            foreach (var role in allRoles)
+            {
+                SelectListItem listItem = new SelectListItem() { Text = role.Name, Value = role.Name };
+                passingRolesList.Add(listItem);
+            }
+            var dictionary = new Dictionary<string, object>();
+            dictionary.Add("selectlist", passingRolesList);
+            dictionary.Add("id", id);
+
+            IEnumerable<SelectListItem> rolesienum = myIdentityManager.AllRolesToIenumSelectListItemsForuser(id);
+            dictionary.Add("ienum", rolesienum);
+            return PartialView(dictionary);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Global Admin")]
+        public async Task<ActionResult> ManageRolesForUser(string id, string[] role, FormCollection collection)
+        {
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+            var user = myIdentityManager.SearchUserById(id);
+            #region safety checks
+            if (user == null){return HttpNotFound("User with id " + id + "not found!");}
+            if (role == null) { return HttpNotFound("ManageRolesForUser: Roles table zero"); }
+            //delete all roles form user, and add the new roles in the table 
+            if (!myIdentityManager.RemoveUserFromRoles(id).Succeeded){return HttpNotFound("removeRolesError");}
+            var result = false;
+            foreach (var r in role)
+            {
+                if (r.IsNullOrWhiteSpace()) { return HttpNotFound("AddNewRoleToUser: a role in the roles table is null or whitespace!"); }
+                //if role exists and we are not trying to add the user to an non existing role in the db
+                if (!myIdentityManager.RoleExist(r)) { return HttpNotFound("AddNewRoleToUser: system roles not representing roles table"); }
+                //if user is already in this role
+                result = myIdentityManager.AddUserToRole(id, r);
+            }
+            #endregion
+            //add user to every role
+            //var result = myIdentityManager.AddUserToRoles(id, role);
+         
+            if (result == true)
+            {
+                return Json(new { success = true });
+            }
+            return HttpNotFound("AddNewRoleToUser: Error adding role: " + role + " to user with id " + id);
+ 
+        }
+
+        //GET: AdminMainPage/AddUser
+        public ActionResult AddUser()
+        {
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+            ApplicationUser user = new ApplicationUser();
+            user.Id = Guid.NewGuid().ToString();
+            myIdentityManager.CreateNewUser(user, "qqqqqq");
+            return PartialView();
+        }
+
     }
 }

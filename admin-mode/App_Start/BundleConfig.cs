@@ -49,8 +49,8 @@ namespace admin_mode
                       "~/Content/bootstrap.css",
                       "~/Content/gpyphed-icon-list.css",
                       "~/Content/bootstrap-switch/bootstrap3/bootstrap-switch.css",
-                      "~/Content/site.css",
-                      "~/Content/bootstrap-multiselect.css" 
+                      "~/Content/bootstrap-multiselect.css",
+                      "~/Content/Site.css"
                       ));
         }
     }

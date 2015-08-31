@@ -7,17 +7,19 @@
 
         // hide dropdown if any
         $(e.target).closest('.btn-group').children('.dropdown-toggle').dropdown('toggle');
-            
+        
         //when modal is fnshed load
         $('#myModalContent').load(this.href, function () {
             //invoke bootstrap-switch method for the modals
             try {
-                $('[type="checkbox"]').bootstrapSwitch();
-                $("[name='my-checkbox']").bootstrapSwitch();
-
-            } catch (eXC) {
-
+                /*++*/$('[type="checkbox"]').bootstrapSwitch(); 
+                //$("[name='my-checkbox']").bootstrapSwitch();
+            } catch (eXC) { 
             }
+             
+            $('[type="role"]').multiselect();
+                
+             
             $('#myModal').modal({
                 /*backdrop: 'static',*/
                 keyboard: true

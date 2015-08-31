@@ -4,10 +4,11 @@
 @model PagedList.IPagedList<admin_mode.Models.ApplicationUser>
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
-    ViewBag.Title = "Users 2";
+    ViewBag.Title = "Users";
 }
 
 @Scripts.Render("~/bundles/modalform")
+
 <br />
 <!-- modal placeholder-->
 <div id='myModal' class='modal fade in'>
@@ -45,8 +46,8 @@
 
     <table class="table table-bordered table-hover">
         <tr>
-            <th>
-                @Html.ActionLink("Email", "Users2", new { sortOrder = ViewBag.NameSortParm, searchString = ViewBag.CurrentFilter })
+            <th> 
+                @Html.ActionLink("Email", "Users2", new {sortOrder = ViewBag.NameSortParm, searchString = ViewBag.CurrentFilter})
             </th>
             <th>
                 @Html.ActionLink("Username", "Users2", new { sortOrder = ViewBag.UsernameSortParam, searchString = ViewBag.CurrentFilter })
@@ -76,12 +77,10 @@
                                 data-delay="5000" data-close-others="true">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </button>
-
-
                         <ul class="dropdown-menu" role="menu">
                             <li>@Html.ActionLink("Edit User", "UserEdit2", new { id = usr.Id }, 
                                             new { data_modal = "" })</li>
-                            <li>@Html.ActionLink("Edit Roles", "AddNewRoleToUser2", new {id = usr.Id}, 
+                            <li>@Html.ActionLink("Edit Roles", "ManageRolesForUser", new {id = usr.Id}, 
                                             new {data_modal = ""})</li>
                         </ul>
                     </div>

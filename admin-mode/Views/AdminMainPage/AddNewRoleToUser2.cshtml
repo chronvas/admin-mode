@@ -39,7 +39,20 @@
 
  }
  
+@*@using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
+        <div class="form-actions no-color">
+            <div class="form-actions no-color">
+                <div class="form-actions no-color">
+                    <input type="submit" value="AddNewRoleToUser" class="btn btn-default"/>
+                        @Html.ActionLink("Back to List", "Users")
+                </div>
+            </div>
+        </div>
+
+    }*@
 @section scripts
 {
     

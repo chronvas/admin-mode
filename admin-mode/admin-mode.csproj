@@ -199,6 +199,7 @@
     <Compile Include="Models\AdminMainPageModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\WWUserRoleModels.cs" />
     <Compile Include="My custom\Helpers\MyHelper.cs" />
     <Compile Include="My custom\MyIdentityManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -295,6 +296,8 @@
     <Content Include="Views\AdminMainPage\UserEdit2.cshtml" />
     <Content Include="Views\AdminMainPage\Users2.cshtml" />
     <Content Include="Views\AdminMainPage\AddNewRoleToUser2.cshtml" />
+    <Content Include="Views\AdminMainPage\ManageRolesForUser.cshtml" />
+    <Content Include="Views\AdminMainPage\AddUser.cshtml" />
     <None Include="Views\AdminMainPage\Users.cshtml" />
     <Content Include="Views\AdminMainPage\UserEdit.cshtml" />
   </ItemGroup>

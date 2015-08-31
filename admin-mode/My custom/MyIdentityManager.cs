@@ -51,13 +51,23 @@ namespace admin_mode.My_custom
             }
             private set { _signInManager = value; }
         }
-
+        /// <summary>
+        /// All the roles from the DB to a List of strings
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllRolesToList()
+        {
+            var allRoles = _roleManager.Roles.ToList();
+            List<string> allRolesStr = null;
+            var rrx = allRoles.Select(role => role.Name);
+            return rrx.ToList();
+            
+        }
         public bool CreateNewUserRole(string role)
         {
             if (!RoleExist(role))
             {
                 var result = _roleManager.Create(new IdentityRole(role));
-
                 return result.Succeeded;
             }
             return false;
@@ -180,6 +190,12 @@ namespace admin_mode.My_custom
             var result = _userManager.RemoveFromRole(userId, role);
             return result;
         }
+        public IdentityResult RemoveUserFromRoles(string userId )
+        {
+            var allRoles = GetUserRoles(userId);
+            var result = _userManager.RemoveFromRoles(userId, allRoles.ToArray());
+            return result;
+        }
 
         public List<ApplicationUser> GetAllUsers()
         {
@@ -190,7 +206,8 @@ namespace admin_mode.My_custom
 
         public IList<string> GetUserRoles(string userid)
         {
-            return _userManager.GetRoles(userid);
+            var ret = _userManager.GetRoles(userid);
+            return ret;
         }
 
         public string GetUserRole(string userid)
@@ -369,7 +386,7 @@ namespace admin_mode.My_custom
             {
                 if (IsUserInRolebyId(item.Value, id))
                 {
-                    item.Disabled = true;
+                    item.Selected = true;
                 }
             }
             Debug.WriteLine("-- Roles nu "+ list.Count);
