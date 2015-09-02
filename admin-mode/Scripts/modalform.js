@@ -1,9 +1,14 @@
-﻿$(function () {
+﻿function getLang() {
+    if (navigator.languages != undefined)
+        return navigator.languages[0];
+    else
+        return navigator.language;
+} 
+$(function () {
     
     $.ajaxSetup({ cache: false });
     //on click to open modal
     $("a[data-modal]").on("click", function (e) {
-         
 
         // hide dropdown if any
         $(e.target).closest('.btn-group').children('.dropdown-toggle').dropdown('toggle');
@@ -18,7 +23,11 @@
             }
              
             $('[type="role"]').multiselect();
-                
+  
+            $('.datepicker').datepicker();
+            $('#datetimepicker').datetimepicker({
+                locale: getLang()
+            });
              
             $('#myModal').modal({
                 /*backdrop: 'static',*/
@@ -33,6 +42,9 @@
 
 
 });
+
+
+
 //called when save is pressed
 function bindForm(dialog) {
     

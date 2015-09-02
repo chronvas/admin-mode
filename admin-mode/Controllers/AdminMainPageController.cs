@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
+using System.IdentityModel.Metadata;
 using System.Linq;
 using System.Net;
 using System.Net.Mime;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -503,23 +505,94 @@ namespace admin_mode.Controllers
             // id system
             //
             MyIdentityManager myIdentityManager = new MyIdentityManager();
-
+            
             ApplicationUser newUser = new ApplicationUser();
 
-            newUser.EnrollmentDate = Convert.ToDateTime("2/2/2002");
-            newUser.Email = "testtest@testtest.tes";
-            newUser.EmailConfirmed = true;
+            newUser.EnrollmentDate = applicationUser.EnrollmentDate;
+            newUser.Email = applicationUser.Email;
+            newUser.EmailConfirmed = applicationUser.EmailConfirmed;
             //newUser.PhoneNumber = applicationUser.PhoneNumber;
             //newUser.PhoneNumberConfirmed = applicationUser.PhoneNumberConfirmed;
             //newUser.TwoFactorEnabled = applicationUser.TwoFactorEnabled;
             newUser.LockoutEnabled = false;
             //newUser.AccessFailedCount = applicationUser.AccessFailedCount;
-            newUser.UserName = "testtest@testtest.tes";
+            newUser.UserName = applicationUser.UserName;
+            
             //password
             var PasswordHash = new PasswordHasher();
             var hp = PasswordHash.HashPassword("qqqqqq");
+
             myIdentityManager.CreateNewUser(newUser, hp);
             return Json(new { success = true });
+        }
+        
+        
+        
+        //GET: AdminMainPage/AddUser
+        public async Task<ActionResult> AddNewUser()
+        {
+
+            return PartialView();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddNewUser(
+            [Bind(
+                Include =
+                    "Email,Password,UserName,EnrollmentDate,PhoneNumber,PhoneNumberConfirmed" +
+                    ",TwoFactorEnabled,LockoutEnabled,LockoutEndDateUtc,AccessFailedCount,EmailConfirmed"
+                )] AddNewUserViewModel addNewUserViewModel)
+        {
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+             
+
+            ApplicationUser newUser = new ApplicationUser();
+            if (!ModelState.IsValid)
+            {//if the modelstate is not valid, pass the errors to a string, and display via httpnotfount. Not the best way, but works
+                #region error reporting
+                var modelStateerrors = ModelState.Where(x => x.Value.Errors.Count > 0)
+                    .Select(x => new { x.Key, x.Value.Errors }).ToArray();
+                string errorList = "";
+                var vasdvasd = modelStateerrors.Count();
+                var va3sdvasd = modelStateerrors.Length;
+                
+
+                if (modelStateerrors !=null)
+                {
+                    foreach (var modelerr in modelStateerrors)
+                    {
+                        foreach (var modelerro in modelerr.Errors)
+                        {
+                            errorList = errorList + " | " + modelerro.ErrorMessage;
+                        } 
+                    }
+                }
+                //return PartialView("CustomError", errorList);
+                #endregion
+            }
+            //our user, to ASPNET user. Relying to ASPNET's input error checks etc
+            DateTime temp = DateTime.Now;
+            var user = new ApplicationUser {    Email = addNewUserViewModel.Email, 
+                                                UserName = addNewUserViewModel.Email, 
+                                                EnrollmentDate = addNewUserViewModel.EnrollmentDate ?? temp,  //if the user leaves that blank, fill it with datetime.now
+                                                PhoneNumber = addNewUserViewModel.PhoneNumber,
+                                                PhoneNumberConfirmed = addNewUserViewModel.PhoneNumberConfirmed,
+                                                TwoFactorEnabled = addNewUserViewModel.TwoFactorEnabled,
+                                                LockoutEnabled = addNewUserViewModel.LockoutEnabled,
+                                                LockoutEndDateUtc = addNewUserViewModel.LockoutEndDateUtc,
+                                                AccessFailedCount = addNewUserViewModel.AccessFailedCount ?? 0, //if the user leaves that blank, make it 0
+                                                EmailConfirmed = addNewUserViewModel.EmailConfirmed
+                                                };
+            var createUserResult =   myIdentityManager.CreateNewUser( user, addNewUserViewModel.Password);
+          
+            if (createUserResult.Succeeded)
+            {
+                return Json(new { success = true });
+            }
+            else
+            { 
+                return HttpNotFound("User data not valid, please try again");
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace admin_mode.Models
 {
-    public class WWUserRoleModels
+    public class JonCombobox
     {
         public List<IdentityRole> HAS { get; set; }
 

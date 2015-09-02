@@ -33,6 +33,24 @@ namespace admin_mode
                         "~/Scripts/bootstrap-multiselect-collapsible-groups"
                         ));
 
+            //bootstrap datepicker
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap-datepicker").Include(
+                        "~/Scripts/bootstrap-datepicker.js"
+                        ));
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap-datepicker-min").Include(
+                        "~/Scripts/bootstrap-datepicker-min.js"
+                        ));
+
+            //bootstrap datetimepicker
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap-datetimepicker").Include(
+                        "~/Scripts/moment-with-locales.js" ,
+                        "~/Scripts/bootstrap-datetimepicker.js"
+                        ));
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap-datetimepicker-min").Include(
+                        "~/Scripts/moment-with-locales.min.js",
+                        "~/Scripts/bootstrap-datetimepicker.min.js"
+                        ));
+           
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
@@ -50,6 +68,8 @@ namespace admin_mode
                       "~/Content/gpyphed-icon-list.css",
                       "~/Content/bootstrap-switch/bootstrap3/bootstrap-switch.css",
                       "~/Content/bootstrap-multiselect.css",
+                      "~/Content/bootstrap-datepicker3.css",
+                      "~/Content/bootstrap-datetimepicker.css",
                       "~/Content/Site.css"
                       ));
         }

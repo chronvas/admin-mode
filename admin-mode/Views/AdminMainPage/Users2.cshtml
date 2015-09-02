@@ -14,7 +14,7 @@
 <div id='myModal' class='modal fade in'>
     <div class="modal-dialog">
         <div class="modal-content">
-            <div id='myModalContent'></div>
+            <div id='myModalContent' style="display: block"></div>
         </div>
     </div>
 </div>
@@ -39,7 +39,7 @@
                 @{  //actionlink made to button with bootstrap icon inside the button
                     //apo http://stackoverflow.com/questions/1547097/asp-net-mvc-how-to-include-span-in-link-from-html-actionlink
                     //
-                    var link2 = Html.ActionLink("{0}", "AddUser", null, new { id = "AddUser", @class = "btn btn-sm bg-primary pull-right", data_modal = "" });
+                    var link2 = Html.ActionLink("{0}", "AddNewUser", null, new { id = "AddUser", @class = "btn btn-sm bg-primary pull-right", data_modal = "" });
                     var link2S = link2.ToString();
                     var url2 = string.Format(link2S, "<span class=\"glyphicon glyphicon-plus\"> </span>   New User  ");
                 }
@@ -131,7 +131,7 @@
                 this.href = this.href + '?SearchString=' + encodeURIComponent(name);
             });
         });
-
+        
     </script>
 
 }

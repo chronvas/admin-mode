@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 
 namespace admin_mode.Models
 {
@@ -109,4 +111,6 @@ namespace admin_mode.Models
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
+
+    
 }
