@@ -23,7 +23,8 @@ $(function () {
             }
              
             $('[type="role"]').multiselect();
-  
+            $('[type="ComboItems"]').multiselect();
+            
             $('.datepicker').datepicker();
             $('#datetimepicker').datetimepicker({
                 locale: getLang()

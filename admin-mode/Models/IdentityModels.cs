@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -15,10 +17,13 @@ namespace admin_mode.Models
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
+            this.ComboItems = new HashSet<ComboItem>();
             return userIdentity;
+            
         }
 
         public DateTime EnrollmentDate { get; set; }
+        public virtual ICollection<ComboItem> ComboItems { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -32,11 +37,16 @@ namespace admin_mode.Models
         {
             return new ApplicationDbContext();
         }
+           
+        public DbSet<ComboItem> ComboItem { get; set; }
+
+        /*
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserComboItem>().HasKey(k => new { k.UserId, k.CombooItemId });
+        }
+        */
          
-
-
-        //public System.Data.Entity.DbSet<admin_mode.Models.ApplicationUser> ApplicationUsers { get; set; }
-
         // commented out giati evgaze to error:
         //Multiple object sets per type are not supported.The object sets 'Identity Users' and 'Users' can both contain instances of type 'admin-mode.Models.ApplicationUser'.
         //public System.Data.Entity.DbSet<admin_mode.Models.ApplicationUser> ApplicationUsers { get; set; }

@@ -170,7 +170,7 @@ namespace admin_mode.Controllers
             return Content(xml, "text/xml");
         } 
 
-
+        //PALIO
         // GET: AdminMainPage/UserEdit/5
         [Authorize(Roles = "Global Admin")]
         public ActionResult UserEdit(string id)
@@ -210,9 +210,7 @@ namespace admin_mode.Controllers
             return RedirectToAction("Users");
         }
          
-
-
-
+        //PALIO
         // GET: AdminMainPage/DeleteRoleFromUser/5
         [Authorize(Roles = "Global Admin")]
         public ActionResult DeleteRoleFromUser(string id, string role)
@@ -250,7 +248,8 @@ namespace admin_mode.Controllers
         }
 
         [Authorize(Roles = "Global Admin")]
-        //Get: AdminMainPage/AddNewRoleToUser
+        //PALIO
+        //Get: AdminMainPage/AddNewRoleToUser 
         //it will present a list of available roles for the user to be added to \
         public ActionResult AddNewRoleToUser(string id)
         {
@@ -531,7 +530,6 @@ namespace admin_mode.Controllers
         //GET: AdminMainPage/AddUser
         public async Task<ActionResult> AddNewUser()
         {
-
             return PartialView();
         }
 
@@ -593,6 +591,78 @@ namespace admin_mode.Controllers
             { 
                 return HttpNotFound("User data not valid, please try again");
             }
+        }
+
+
+        public async Task<ActionResult> ManageComboItemsforUser(string id)
+        {
+            if (id.IsNullOrWhiteSpace()) { return HttpNotFound("id null or whitespace"); }
+            MyComboItemManager myComboItemManager = new MyComboItemManager();
+            List<SelectListItem> passingComboItemsList = new List<SelectListItem>();
+            var allComboItems = myComboItemManager.GetAllComboItems();
+            if (allComboItems.Count == 0) { return HttpNotFound("No comboitems available in the system. Create a New Role First!"); }
+            foreach (var comboitem in allComboItems)
+            {
+                SelectListItem listItem = new SelectListItem() { Text = comboitem.Name, Value = comboitem.Name };
+                passingComboItemsList.Add(listItem);
+            }
+            var dictionary = new Dictionary<string, object>();
+            dictionary.Add("selectlist", passingComboItemsList);
+            dictionary.Add("id", id); 
+
+            IEnumerable<SelectListItem> comboItemsIenum =
+                myComboItemManager.AllComboItemsToIenumSelectlistItemsForUser(id);
+            dictionary.Add("ienum", comboItemsIenum);
+            return PartialView(dictionary);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManageComboItemsforUser(string id, string[] ComboItems, FormCollection collection)
+        {
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+            MyComboItemManager myComboItemManager = new MyComboItemManager();
+            if (ComboItems != null)
+            {
+                foreach (var comboItem in ComboItems)
+                {
+                    if (comboItem.IsNullOrWhiteSpace())
+                    {
+                        return HttpNotFound("AddNewRoleToUser: a role in the roles table is null or whitespace!");
+                    }
+                    //if role exists and we are not trying to add the user to an non existing role in the db
+                }
+            }
+
+            if (id.IsNullOrWhiteSpace()) return HttpNotFound("User Id Is null! 4956");
+
+            var user = myIdentityManager.SearchUserById(id);
+            if (user == null) { return HttpNotFound("User with id " + id + "not found!"); }
+            //if (ComboItems == null) { return HttpNotFound("ManageRolesForUser: ComboItems table zero"); }
+
+            bool result = myComboItemManager.UpdateComboItemsforUser(id, ComboItems);
+            if (result == true)
+            {
+                return Json(new { success = true });
+            }
+
+
+             
+            //add user to every role
+            //var result = myIdentityManager.AddUserToRoles(id, role);
+
+            if (result == true)
+            {
+                return Json(new { success = true });
+            }
+            return HttpNotFound("AddNewRoleToUser: Error adding role: " + " to user with id " + id);
+
+
+
+
+
+            return Json(new { success = true });
         }
     }
 }

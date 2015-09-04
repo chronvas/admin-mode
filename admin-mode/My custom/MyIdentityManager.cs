@@ -30,6 +30,7 @@ namespace admin_mode.My_custom
             _dbContext = new ApplicationDbContext();
             _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_dbContext));
             _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_dbContext));
+            //idk why they are used..
             protectionProvider = new DpapiDataProtectionProvider("Demo");
             _userManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(protectionProvider.Create("ResetTokens"));
         }

@@ -90,7 +90,9 @@
                         <ul class="dropdown-menu" role="menu">
                             <li>@Html.ActionLink("Edit User", "UserEdit2", new { id = usr.Id }, 
                                             new { data_modal = "" })</li>
-                            <li>@Html.ActionLink("Edit Roles", "ManageRolesForUser", new {id = usr.Id}, 
+                            <li>@Html.ActionLink("Edit Roles", "ManageRolesForUser", new {id = usr.Id},
+                                    new {data_modal = ""})</li>
+                            <li>@Html.ActionLink("Edit ComboItems", "ManageComboItemsforUser", new {id = usr.Id}, 
                                             new {data_modal = ""})</li>
                         </ul>
                     </div>
