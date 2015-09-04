@@ -29,8 +29,14 @@ namespace admin_mode.My_custom
             protectionProvider = new DpapiDataProtectionProvider("Demo");
             _userManager.UserTokenProvider =
                 new DataProtectorTokenProvider<ApplicationUser>(protectionProvider.Create("ResetTokens"));
+            
         }
 
+        public void DisposeAll()
+        {
+            _dbContext.Dispose();
+            _userManager.Dispose();
+        }
         public async Task<bool> CreateNewComboItem(string Name)
         {
             ComboItem Cnew = new ComboItem() {Name = Name,CombooItemId = Guid.NewGuid().ToString()};
@@ -96,7 +102,7 @@ namespace admin_mode.My_custom
             //var sada = _dbContext.ComboItem.SelectMany(o => o.ApplicationUsers);
             List<string> list = new List<string>();
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == id);
-            List<ComboItem> cItemsForUser = user.ComboItems.ToList();
+            List<ComboItem> cItemsForUser = user.ComboItems.OrderBy(w=>w.Name).ToList();
             
 
             return cItemsForUser;
@@ -160,22 +166,16 @@ namespace admin_mode.My_custom
                 return true;
             }
 
-            int count = comboItems.Length;
-            //if the list is the same, and the user just pressed Save without changing anything!
-            var allComboItemsListForUser = AllComboItemsListForUser(id);
-            foreach (var comboItemForUser in allComboItemsListForUser)
-            {
-                foreach (var comboItemPassed in comboItems)
-                {
-                    if (comboItemForUser.Name == comboItemPassed) count = count - 1;
-                    //if (String.Compare(comboItemPassedstr, cIforUser, StringComparison.Ordinal) == 0)
-                    //{
-                    //    count -= count;
-                    //}
-                }
-                 
-            }
-            if (count == 0) return true;
+            //int count = comboItems.Length;
+            ////if the list is the same, and the user just pressed Save without changing anything!
+            //var allComboItemsAssignedToUserList = AllComboItemsListForUser(id);
+            
+            //foreach (var comboItemAssignedToUser in allComboItemsAssignedToUserList)
+            //{
+            //    if (comboItems.Contains(comboItemAssignedToUser.Name))
+            //        count--;
+            //}
+            //if (count == 0) return true;
 
             foreach (var comboItem in comboItems)
             { //an den einai assoc me to item, prosthese ton

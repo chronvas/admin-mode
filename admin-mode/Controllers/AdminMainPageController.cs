@@ -633,36 +633,25 @@ namespace admin_mode.Controllers
                     }
                     //if role exists and we are not trying to add the user to an non existing role in the db
                 }
-            }
+            }// if ComboItems==null is checked by UpdateComboItemsforUser, and there is an action for that
 
             if (id.IsNullOrWhiteSpace()) return HttpNotFound("User Id Is null! 4956");
 
+            //find user
             var user = myIdentityManager.SearchUserById(id);
             if (user == null) { return HttpNotFound("User with id " + id + "not found!"); }
             //if (ComboItems == null) { return HttpNotFound("ManageRolesForUser: ComboItems table zero"); }
 
+            //Logic to update with new selection of ComboItems
             bool result = myComboItemManager.UpdateComboItemsforUser(id, ComboItems);
-            if (result == true)
-            {
-                return Json(new { success = true });
-            }
 
-
-             
-            //add user to every role
-            //var result = myIdentityManager.AddUserToRoles(id, role);
+            //myComboItemManager.DisposeAll();
 
             if (result == true)
             {
                 return Json(new { success = true });
-            }
-            return HttpNotFound("AddNewRoleToUser: Error adding role: " + " to user with id " + id);
-
-
-
-
-
-            return Json(new { success = true });
+            } 
+            return HttpNotFound("AddNewRoleToUser: Error adding role: " + " to user with id " + id); 
         }
     }
 }
