@@ -20,13 +20,36 @@
         </dd>
 
     </dl>
+    <div class="bg-warning">
+        <div class="text-warning alert-danger h3"><span class="glyphicon glyphicon-warning-sign"></span> Warning!</div>
+        <div class="text-warning ">
+            There are still <b>@Model.ApplicationUsers.Count</b> User(s) associated with this Item!
+        </div>
+
+        @foreach (var applicationUser in @Model.ApplicationUsers)
+            {
+            <br />
+                <b>
+                    @applicationUser.UserName
+                </b>
+        }
+        <br />
+        <br />
+
+        <div class="text-warning ">
+            If you continue, Theese users will lose the association!
+        </div>
+        <br />
+    </div>
+    <br />
 
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
             @Html.ActionLink("Back to List", "Index")
         </div>
     }
+
 </div>

@@ -79,6 +79,44 @@ namespace admin_mode.My_custom
             return all;
         }
 
+        public List<ComboItem> GetAllComboItemsForUsername(string username)
+        {
+            var user = _dbContext.Users.FirstOrDefault(x => x.UserName == username);
+            if (user != null) return user.ComboItems.ToList();
+            Debug.WriteLine("GetAllComboItemsForUsername->User null");
+            return null;
+        }
+        public List<ComboItem> GetAllComboItemsForId(string id)
+        {
+            var user = _dbContext.Users.FirstOrDefault(x => x.Id == id);
+            if (user != null) return user.ComboItems.ToList();
+            Debug.WriteLine("GetAllComboItemsForUsername->User null");
+            return null;
+        }
+        public string[] GetAllComboItemsForUsernameStringTable(string username)
+        {
+            var user = _dbContext.Users.FirstOrDefault(x => x.UserName == username);
+            List<string> s= new List<string>();
+
+            foreach (var comboItem in user.ComboItems)
+            {
+                s.Add(comboItem.Name);
+            }
+            String[] stringArray = s.ToArray();
+            return stringArray;
+        }
+
+        public string[] GetAllComboItemsStringTable()
+        {
+            List<string> s = new List<string>();
+            var ds = _dbContext.ComboItem.ToArray();
+            foreach (var comboItem in ds)
+            {
+                s.Add(comboItem.Name);
+            }
+            String[] stringArray = s.ToArray();
+            return stringArray;
+        }
         public IEnumerable<SelectListItem> AllComboItemsToIenumSelectlistItemsForUser(string id)
         {
             List<SelectListItem> list = null;
@@ -218,6 +256,45 @@ namespace admin_mode.My_custom
             //var s = _dbContext.ComboItem.FirstOrDefault(x => x.ApplicationUsers == _userManager.Users.FirstOrDefault(f => f.Id == id));
             
             _dbContext.SaveChanges();
+        }
+
+        public IEnumerable<SelectListItem> AllRolesToIenumSelectListItems()
+        {
+            List<SelectListItem> list = null;
+            var query = (from ca in _dbContext.ComboItem
+                         orderby ca.Name
+                         select new SelectListItem { Text = ca.Name, Value = ca.Name }).Distinct();
+            list = query.ToList();
+            Debug.WriteLine("-- ComboItems nu", list.Count);
+            return list;
+        }
+
+        public IEnumerable<SelectListItem> GetAllRolesForUserIdToIenumSelectListItem(string id)
+        {
+            List<SelectListItem> list = new List<SelectListItem>();
+//            var query = from ca in _dbContext.Users.Where(x => x.Id == id)
+//                        select new SelectListItem {Text = ca.Id, Value = ca.UserName};
+//            list = query.ToList();
+            var allComboItems = GetAllComboItems();
+             
+            foreach (var usersComboItem in allComboItems)
+            {
+                SelectListItem x = new SelectListItem()
+                {
+                    Value = usersComboItem.Name,
+                    Text = usersComboItem.Name,
+                    Selected = IsUserAssosiacedWithComboItemById(usersComboItem.Name,id)
+                };
+                list.Add(x);
+            }
+            
+            Debug.WriteLine("-- ComboItems nu", list.Count);
+            return list;
+        } 
+
+        private ComboItem GetComboItemById(string id)
+        {
+            return _dbContext.ComboItem.FirstOrDefault(x => x.CombooItemId == id);
         }
     }
 }

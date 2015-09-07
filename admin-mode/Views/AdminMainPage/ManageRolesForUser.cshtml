@@ -1,26 +1,29 @@
 ﻿@using System.Collections
 @using System.Web.UI.WebControls
 @model Dictionary<string, object>
- 
+
 @{
     string id = Model["id"].ToString();
     List<SelectListItem> theList = (List<SelectListItem>)Model["selectlist"];
     IEnumerable<SelectListItem> theListIenum = (IEnumerable<SelectListItem>)Model["ienum"];
 }
 
-<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h4 class="modal-title" id="myModalLabel">Manage User's Roles</h4>
-</div>
+
 
 @using (Html.BeginForm())
 {
-    <div class="form-horizontal modal-body">
-        @Html.AntiForgeryToken()
-        @Html.DropDownList("role", theListIenum, new {multiple = "multiple", size = 8,type="role"})
-        
+    @Html.AntiForgeryToken()
+    <div class="modal-header">
+        <button type="button" class="close  " data-dismiss="modal" aria-hidden="true">
+            <div class="btn btn-danger">&times;</div>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Manage User's Roles</h4>
     </div>
-    <br/>
+    <div class="form-horizontal modal-body">
+        @Html.DropDownList("role", theListIenum, new { multiple = "multiple", size = 8, type = "role" })
+
+    </div>
+    <br />
     <div class="form-group">
         <div class="col-md-offset-8 col-md-10">
             <input type="submit" value="Save" class="btn btn-primary" />
@@ -34,8 +37,8 @@
 
 
 @section scripts{
-    <script> 
-        $(function(argument) {             
+    <script>
+        $(function (argument) {
             $('#role').multiselect();
         });
     </script>

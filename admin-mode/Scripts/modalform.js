@@ -17,7 +17,7 @@ $(function () {
         $('#myModalContent').load(this.href, function () {
             //invoke bootstrap-switch method for the modals
             try {
-                /*++*/$('[type="checkbox"]').bootstrapSwitch(); 
+                /*++*/$('[type="checkbox"]').bootstrapSwitch({ size: "small" });
                 //$("[name='my-checkbox']").bootstrapSwitch();
             } catch (eXC) { 
             }
@@ -27,6 +27,9 @@ $(function () {
             
             $('.datepicker').datepicker();
             $('#datetimepicker').datetimepicker({
+                locale: getLang()
+            });
+            $('#datetimepicker2').datetimepicker({
                 locale: getLang()
             });
              

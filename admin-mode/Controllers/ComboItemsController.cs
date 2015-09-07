@@ -105,15 +105,11 @@ namespace admin_mode.Controllers
         // GET: ComboItems/Delete/5
         public async Task<ActionResult> Delete(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == null){return new HttpStatusCodeResult(HttpStatusCode.BadRequest);}
+
             ComboItem comboItem = await db.ComboItem.FindAsync(id);
-            if (comboItem == null)
-            {
-                return HttpNotFound();
-            }
+            if (comboItem == null){return HttpNotFound();} 
+
             return View(comboItem);
         }
 

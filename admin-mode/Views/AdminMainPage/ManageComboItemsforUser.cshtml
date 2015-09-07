@@ -10,18 +10,21 @@
 }
 
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <button type="button" class="close  " data-dismiss="modal" aria-hidden="true">
+        <div class="btn btn-danger">&times;</div>
+    </button>
     <h4 class="modal-title" id="myModalLabel">Manage User's ComboItems</h4>
 </div>
 
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
+
     <div class="form-horizontal modal-body">
-        @Html.AntiForgeryToken()
         @Html.DropDownList("ComboItems", theListIenum, new {multiple = "multiple", size = 8,type= "ComboItems" })
-        
     </div>
     <br/>
+
     <div class="form-group">
         <div class="col-md-offset-8 col-md-10">
             <input type="submit" value="Save" class="btn btn-primary" />

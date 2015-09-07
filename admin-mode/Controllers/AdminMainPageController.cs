@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using System.Xml;
 using System.Xml.Serialization;
 using admin_mode.Models;
@@ -324,8 +325,17 @@ namespace admin_mode.Controllers
                 return HttpNotFound("user not found!!"+e);
             }
             
+            MyComboItemManager myComboItemManager = new MyComboItemManager();
+            Dictionary<object, object> dictionary = new Dictionary<object, object>();
+
+            var I = myComboItemManager.AllRolesToIenumSelectListItems();
+            var I2 = myComboItemManager.GetAllRolesForUserIdToIenumSelectListItem(id);
             
-            return PartialView("UserEdit2", user);
+
+            dictionary.Add("ienum", I2);
+            dictionary.Add("applicationUser", user);
+
+            return PartialView("UserEdit2", dictionary);
         }
 
         // POST: AdminMainPage/UserEdit2/5
@@ -334,15 +344,22 @@ namespace admin_mode.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Global Admin")]
-        public async Task<ActionResult> UserEdit2([Bind(Include = "EnrollmentDate,Email,Id,EmailConfirmed,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnabled,AccessFailedCount,UserName")] ApplicationUser applicationUser)
+        public async Task<ActionResult> UserEdit2([Bind
+            (Include = "EnrollmentDate,Email,Id,EmailConfirmed," +
+                       "PhoneNumber,PhoneNumberConfirmed," +
+                       "TwoFactorEnabled,LockoutEnabled," +
+                       "AccessFailedCount,UserName," +
+                       "LockoutEndDateUtc,ComboItems")]
+                                        ApplicationUser applicationUser,string[] ComboItems )
         {
             if (ModelState.IsValid)
             {
                 MyIdentityManager myIdentityManager = new MyIdentityManager();
+                MyComboItemManager myComboItemManager = new MyComboItemManager();
                 //get the user based on the id
                 var userEdited = myIdentityManager.SearchUserById(applicationUser.Id);
-                 
-
+                
+                myComboItemManager.UpdateComboItemsforUser(applicationUser.Id, ComboItems);
 
                 userEdited.EnrollmentDate = applicationUser.EnrollmentDate;
                 userEdited.Email = applicationUser.Email;
@@ -351,6 +368,7 @@ namespace admin_mode.Controllers
                 userEdited.PhoneNumberConfirmed = applicationUser.PhoneNumberConfirmed;
                 userEdited.TwoFactorEnabled = applicationUser.TwoFactorEnabled;
                 userEdited.LockoutEnabled = applicationUser.LockoutEnabled;
+                userEdited.LockoutEndDateUtc = applicationUser.LockoutEndDateUtc;
                 userEdited.AccessFailedCount = applicationUser.AccessFailedCount;
                 userEdited.UserName = applicationUser.UserName;
                 var userEditResult = myIdentityManager.UpdateUser(userEdited);
@@ -360,7 +378,7 @@ namespace admin_mode.Controllers
                     return HttpNotFound("not updated");
                 }
 
-
+                myComboItemManager.DisposeAll();
                 return Json(new { success = true });
             }
             return PartialView("Users2");
@@ -652,6 +670,21 @@ namespace admin_mode.Controllers
                 return Json(new { success = true });
             } 
             return HttpNotFound("AddNewRoleToUser: Error adding role: " + " to user with id " + id); 
+        }
+
+        //mockup. Not for use.
+        public ActionResult ChooseRolePartial(string username)
+        {
+            MyComboItemManager myComboItemManager = new MyComboItemManager();
+            var allComboItemsForUser = myComboItemManager.GetAllComboItemsForUsernameStringTable(username);
+            var userRoles = Roles.GetRolesForUser(username); 
+            var comboItems = myComboItemManager.GetAllComboItemsStringTable().Select(y => new SelectListItem
+            {
+                Value = y,
+                Text = y,
+                Selected = allComboItemsForUser.Contains(y)
+            }).ToArray();
+            return null;
         }
     }
 }

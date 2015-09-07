@@ -7,6 +7,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.UI.WebControls;
+using admin_mode.My_custom;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -18,11 +20,21 @@ namespace admin_mode.Models
         {
             var db = new ApplicationDbContext();
             var tot = db.Users.Count();
-            Debug.WriteLine("tot"+tot);
+            db.Dispose();
             return  tot;
         }
 
         public int TotalUsers {get { return GetTotalUsers(); }}
+
+
+        public int GetTotalComboItems()
+        {
+            MyComboItemManager myComboItemManager = new MyComboItemManager();
+            var count = myComboItemManager.GetAllComboItems().Count;
+            myComboItemManager.DisposeAll();
+            return count;
+        }
+        public int TotalComboItems { get { return GetTotalComboItems(); } }
     }
 
     public class AddNewUserViewModel

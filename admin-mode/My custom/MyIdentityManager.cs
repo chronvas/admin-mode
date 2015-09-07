@@ -59,7 +59,6 @@ namespace admin_mode.My_custom
         public List<string> GetAllRolesToList()
         {
             var allRoles = _roleManager.Roles.ToList();
-            List<string> allRolesStr = null;
             var rrx = allRoles.Select(role => role.Name);
             return rrx.ToList();
             

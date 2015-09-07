@@ -13,10 +13,20 @@
         </dt>
 
         <dd>
-        
-            @Html.DisplayFor( model => Model.TotalUsers )
+
+            @Html.DisplayFor(model => Model.TotalUsers)
             |
-            @Html.ActionLink("View All","Users2","AdminMainPage") 
+            @Html.ActionLink("View All", "Users2", "AdminMainPage")
+        </dd>
+        <dt>
+            Total ComboItems
+        </dt>
+
+        <dd>
+        
+            @Html.DisplayFor( model => Model.TotalComboItems )
+            |
+            @Html.ActionLink("View All","Index","ComboItems") 
         </dd>
 
     </dl>
