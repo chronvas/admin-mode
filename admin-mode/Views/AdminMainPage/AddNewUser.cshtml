@@ -1,8 +1,5 @@
 ﻿@model admin_mode.Models.AddNewUserViewModel
-
-@Styles.Render("~/Content/css")
-@Scripts.Render("~/bundles/bootstrap")
-
+ 
 @Scripts.Render("~/bundles/bootstrap-switch")
 @*@Scripts.Render("~/bundles/jquery")*@
 @Scripts.Render("~/bundles/jqueryval")
@@ -19,6 +16,15 @@
     <div class="form-horizontal modal-body">
         
         @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
+        <div class="form-group">
+            <div class="col-md-5">
+                @Html.LabelFor(model => model.ComboItems, htmlAttributes: new { @class = "control-label col-md-12", @style = "text-align: right" })
+            </div>
+            <div class="col-md-6">
+                                           @Html.DropDownList("ComboItemsStrTable", Model.ComboItems , new { multiple = "multiple", size = 8, type = "ComboItemsStrTable" }) 
+            </div>
+        </div>
 
         <div class="form-group">
             <div class="col-md-5">

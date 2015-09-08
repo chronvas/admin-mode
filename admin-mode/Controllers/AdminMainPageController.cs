@@ -327,8 +327,7 @@ namespace admin_mode.Controllers
             
             MyComboItemManager myComboItemManager = new MyComboItemManager();
             Dictionary<object, object> dictionary = new Dictionary<object, object>();
-
-            var I = myComboItemManager.AllRolesToIenumSelectListItems();
+             
             var I2 = myComboItemManager.GetAllRolesForUserIdToIenumSelectListItem(id);
             
 
@@ -507,7 +506,7 @@ namespace admin_mode.Controllers
 
         //GET: AdminMainPage/AddUser
         public async Task<ActionResult> AddUser()
-        {
+        { 
 
             return PartialView();
         }
@@ -548,7 +547,10 @@ namespace admin_mode.Controllers
         //GET: AdminMainPage/AddUser
         public async Task<ActionResult> AddNewUser()
         {
-            return PartialView();
+
+            AddNewUserViewModel addNewUserViewModel = new AddNewUserViewModel();
+
+            return PartialView(addNewUserViewModel);
         }
 
         [HttpPost]
@@ -556,13 +558,12 @@ namespace admin_mode.Controllers
             [Bind(
                 Include =
                     "Email,Password,UserName,EnrollmentDate,PhoneNumber,PhoneNumberConfirmed" +
-                    ",TwoFactorEnabled,LockoutEnabled,LockoutEndDateUtc,AccessFailedCount,EmailConfirmed"
-                )] AddNewUserViewModel addNewUserViewModel)
+                    ",TwoFactorEnabled,LockoutEnabled,LockoutEndDateUtc,AccessFailedCount,EmailConfirmed,ComboItemsStrTable"
+                )] AddNewUserViewModel addNewUserViewModel  )
         {
             MyIdentityManager myIdentityManager = new MyIdentityManager();
-             
 
-            ApplicationUser newUser = new ApplicationUser();
+            var ax = addNewUserViewModel.ComboItems;
             if (!ModelState.IsValid)
             {//if the modelstate is not valid, pass the errors to a string, and display via httpnotfount. Not the best way, but works
                 #region error reporting
@@ -600,10 +601,28 @@ namespace admin_mode.Controllers
                                                 EmailConfirmed = addNewUserViewModel.EmailConfirmed
                                                 };
             var createUserResult =   myIdentityManager.CreateNewUser( user, addNewUserViewModel.Password);
-          
+            bool addComboItemToUserResult = false;
             if (createUserResult.Succeeded)
             {
-                return Json(new { success = true });
+                //foreach (var selectListItem in addNewUserViewModel.ComboItems)
+                //{
+                //    MyComboItemManager myComboItemManager = new MyComboItemManager();
+                //    if (selectListItem.Selected)
+                //    {
+                //        addComboItemToUserResult = myComboItemManager.AddComboItemToUser(user.Id, selectListItem.Value);
+                //    }
+                //}
+                
+                //if (addComboItemToUserResult)
+                // the above is the proper way. DropDownList returns a string[] instead a fking IEnumerable<SelectListItem>. FK that
+
+                MyComboItemManager myComboItemManager = new MyComboItemManager();
+                addComboItemToUserResult  = myComboItemManager.UpdateComboItemsforUser(user.Id, addNewUserViewModel.ComboItemsStrTable);
+                myComboItemManager.DisposeAll();
+
+                    return Json(new { success = true });
+                //else
+                //    return HttpNotFound("Could not add Comboitems to User");
             }
             else
             { 

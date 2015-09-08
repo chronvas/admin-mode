@@ -24,6 +24,7 @@ $(function () {
              
             $('[type="role"]').multiselect();
             $('[type="ComboItems"]').multiselect();
+            $('[type="ComboItemsStrTable"]').multiselect();
             
             $('.datepicker').datepicker();
             $('#datetimepicker').datetimepicker({

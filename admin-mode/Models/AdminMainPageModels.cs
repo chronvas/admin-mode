@@ -7,8 +7,10 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 using System.Web.UI.WebControls;
 using admin_mode.My_custom;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -16,15 +18,15 @@ namespace admin_mode.Models
 {
     public class AdminMainPageModels
     {
-        public   int GetTotalUsers()
+        public int GetTotalUsers()
         {
             var db = new ApplicationDbContext();
             var tot = db.Users.Count();
             db.Dispose();
-            return  tot;
+            return tot;
         }
 
-        public int TotalUsers {get { return GetTotalUsers(); }}
+        public int TotalUsers { get { return GetTotalUsers(); } }
 
 
         public int GetTotalComboItems()
@@ -74,9 +76,38 @@ namespace admin_mode.Models
         public virtual DateTime? LockoutEndDateUtc { get; set; }
 
         [Display(Name = "Access Failed Count")]
-        public virtual int? AccessFailedCount { get; set; } 
-         
+        public virtual int? AccessFailedCount { get; set; }
+
         [Display(Name = "Email Confirmed")]
         public virtual bool EmailConfirmed { get; set; }
+
+        //        [Display(Name="Combo Items")]
+        //        public virtual SelectList<ComboItem> ComboItems { get; set; }
+
+
+        public IEnumerable<SelectListItem> ComboItems
+        {
+            get
+            {
+                MyComboItemManager myComboItemManager = new MyComboItemManager();
+                var comboItems = myComboItemManager.AllComboItemsToIenumSelectListItems();
+                myComboItemManager.DisposeAll();
+                return comboItems;
+            }
+            set
+            { //selected false error
+                MyComboItemManager myComboItemManager = new MyComboItemManager();
+                foreach (var selectListItem in value)
+                {
+                    if (selectListItem.Selected)
+                    {
+                        myComboItemManager.AddComboItemToUserforUsername(UserName, selectListItem.Value);
+                    }
+                }
+                myComboItemManager.DisposeAll();
+            }
+        }
+
+        public string[] ComboItemsStrTable { get; set; }
     }
-}
+} 

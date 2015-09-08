@@ -72,6 +72,9 @@ namespace admin_mode
                       "~/Content/bootstrap-datetimepicker.css",
                       "~/Content/Site.css"
                       ));
+
+            bundles.Add(new StyleBundle("~/Content/ForLogin").Include("~/Content/ForLogin.css"));
+
         }
     }
 }

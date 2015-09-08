@@ -60,6 +60,21 @@ namespace admin_mode.My_custom
             
             return true;
         }
+        public bool AddComboItemToUserforUsername(string UserName, string ComboItemName)
+        {
+            var userToAssociate = _dbContext.Users.FirstOrDefault(x => x.UserName == UserName);
+
+            var comboItem = _dbContext.ComboItem.FirstOrDefault(x => x.Name == ComboItemName);
+            //new ComboItem(ComboItemName, userToAssociate);
+
+            //            comboItem?.ApplicationUsers.Add(userToAssociate);  
+            if (comboItem != null) comboItem.ApplicationUsers.Add(userToAssociate);
+            else return false;
+
+            _dbContext.SaveChanges();
+
+            return true;
+        }
         public bool RemoveComboItemFromUser(string UserId, string ComboItemName)
         {
             var userToAssociate = _dbContext.Users.FirstOrDefault(x => x.Id == UserId);
@@ -258,14 +273,14 @@ namespace admin_mode.My_custom
             _dbContext.SaveChanges();
         }
 
-        public IEnumerable<SelectListItem> AllRolesToIenumSelectListItems()
+        public IEnumerable<SelectListItem> AllComboItemsToIenumSelectListItems()
         {
             List<SelectListItem> list = null;
             var query = (from ca in _dbContext.ComboItem
                          orderby ca.Name
                          select new SelectListItem { Text = ca.Name, Value = ca.Name }).Distinct();
             list = query.ToList();
-            Debug.WriteLine("-- ComboItems nu", list.Count);
+            Debug.WriteLine("-- ComboItems nu "+ list.Count);
             return list;
         }
 
