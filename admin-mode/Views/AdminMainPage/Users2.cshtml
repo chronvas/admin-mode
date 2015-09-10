@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
 @using System.Web.UI.WebControls
+@using admin_mode.My_custom.Helpers
 @using PagedList.Mvc;
 @model PagedList.IPagedList<admin_mode.Models.ApplicationUser>
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
@@ -8,8 +9,12 @@
 }
 
 @Scripts.Render("~/bundles/modalform")
-
-<br />
+--<br/>
+  
+@Html.LabelWithMark("asdf6")
+ 
+<br/>
+-- 
 <!-- modal placeholder-->
 <div id='myModal' class='modal fade in'>
     <div class="modal-dialog">
