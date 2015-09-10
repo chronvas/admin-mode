@@ -1,20 +1,21 @@
 ﻿@using admin_mode.Models
+@using Microsoft.Ajax.Utilities
 @model Dictionary<string, object>
 
 @{
     ViewBag.Title = "User Details";
 }
 
+@Scripts.Render("~/bundles/bootstrap-switch")
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h4 class="modal-title" id="myModalLabel">Person Details</h4>
+    <button type="button" class="close  " data-dismiss="modal" aria-hidden="true">
+        <div class="btn btn-danger">&times;</div>
+    </button>
+    <h4 class="modal-title" id="myModalLabel">User Details</h4>
 </div>
 
-<h2>User Details</h2>
 <br />
-@Html.ActionLink("Back to All Users", "Users", null, null)
-<br />
-@{ApplicationUser user = (ApplicationUser) Model["user"];}
+@{ApplicationUser user = (ApplicationUser)Model["user"];}
 
 
 <div class="modal-body">
@@ -25,35 +26,143 @@
         <dd>
             @user.Id
         </dd>
-        
+
         <dt>
             Email
         </dt>
         <dd>
             @user.Email
         </dd>
-        
-        <dt>User is in role(s):</dt>
-        <dd></dd>
-        @foreach (var role in (IList<string>) Model["UserRolesList"])
+
+        <dt>
+            @Html.LabelFor(m => user.UserName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(m => user.UserName)
+        </dd>
+
+        <dt>
+            @Html.LabelFor(m => user.EnrollmentDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(m => user.EnrollmentDate)
+        </dd>
+
+
+
+        <dt>
+            @Html.LabelFor(m => user.EmailConfirmed)
+        </dt>
+        <dd>
+            @Html.DisplayFor(m => user.EmailConfirmed)
+        </dd>
+
+        <dt>
+            @Html.LabelFor(m => user.PhoneNumber)
+        </dt>
+        <dd>
+            @if (user.PhoneNumber.IsNullOrWhiteSpace())
+            {
+                @Html.Raw("-")
+            }
+            else
+            {
+                @Html.DisplayFor(m => user.PhoneNumber)
+
+            }
+        </dd>
+
+        <dt>
+            @Html.LabelFor(m => user.PhoneNumberConfirmed)
+        </dt>
+        <dd>
+            @Html.DisplayFor(m => user.PhoneNumberConfirmed)
+        </dd>
+
+        <dt>
+            @Html.LabelFor(m => user.TwoFactorEnabled)
+        </dt>
+        <dd>
+            @Html.DisplayFor(m => user.TwoFactorEnabled)
+        </dd>
+
+        <dt>
+            @Html.LabelFor(m => user.LockoutEnabled)
+        </dt>
+        <dd>
+            @Html.DisplayFor(m => user.LockoutEnabled)
+        </dd>
+
+        <dt>
+            @Html.LabelFor(m => user.LockoutEndDateUtc)
+        </dt>
+        <dd>
+            @Html.DisplayFor(m => user.LockoutEndDateUtc)
+        </dd>
+
+        <dt>
+            @Html.LabelFor(m => user.AccessFailedCount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(m => user.AccessFailedCount)
+        </dd>
+
+        <hr />
+        <dt>
+            @Html.LabelFor(m => user.ComboItems)
+        </dt>
+        @if (user.ComboItems.Count == 0)
         {
-            <dt>
-                @role
-            </dt>
             <dd>
-                @Html.ActionLink("Delete", "DeleteRoleFromUser", new {id = user.Id, role = role})
+                @Html.Raw("-")
             </dd>
-
         }
-    
+        else
+        {
+            foreach (var comboItem in user.ComboItems)
+            {
+                <dd>
+                    @comboItem.Name
+                </dd>
+            }
+        }
+
+        <hr />
+
+        <dt>User is in role(s):</dt>
+        @{
+            var listOfRoles = (IList<string>)Model["UserRolesList"];
+            if (listOfRoles.Count == 0)
+            {
+                <dd>
+                    @Html.Raw("-")
+                </dd>
+            }
+            else
+            {
+                foreach (var role in (IList<string>
+                    )Model["UserRolesList"])
+                {
+                    <dd>
+                        @role
+                    </dd>
+                }
+            }
+        }
+
+
     </dl>
-    
+
 </div>
 
-<div class="modal-footer">
-    <button class="btn" data-dismiss="modal">Ok</button>
-</div>
-<br/>
-<br/>
-<br/>
-<br/>
+<div class="col-md-offset-10 col-md-10">
+    <button class="btn btn-primary" data-dismiss="modal">Ok</button>
+</div> <br />
+
+@section scripts{
+    <script>
+        $(function (argument) {
+            $('[type="checkbox"]').bootstrapSwitch({ size: "mini" });
+        });
+    </script>
+}

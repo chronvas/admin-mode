@@ -12,7 +12,7 @@
     @Scripts.Render("~/bundles/bootstrap-multiselect")
     @Scripts.Render("~/bundles/bootstrap-datepicker")
     @Scripts.Render("~/bundles/bootstrap-datetimepicker")
-
+    @Scripts.Render("~/bundles/glitch")
     @RenderSection("scripts", required: false)
     <meta name="description" content="Admin-mode"/>
 </head>
@@ -52,3 +52,8 @@
 
 </body>
 </html>
+<script type="text/javascript">
+    $(function () { 
+        $('.navbar-brand').glitch(); 
+    });
+</script>

@@ -21,7 +21,7 @@ $(function () {
                 //$("[name='my-checkbox']").bootstrapSwitch();
             } catch (eXC) { 
             }
-             
+            
             $('[type="role"]').multiselect();
             $('[type="ComboItems"]').multiselect();
             $('[type="ComboItemsStrTable"]').multiselect();

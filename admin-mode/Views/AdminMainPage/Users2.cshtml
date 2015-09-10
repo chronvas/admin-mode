@@ -72,7 +72,9 @@
             {
             <tr>
                 <td>
-                    @Html.ActionLink(@usr.Email, "UserDetails", new { id = usr.Id })
+                    @*                    @Html.ActionLink(@usr.Email, "UserDetails", new { id = usr.Id })*@
+                    @Html.ActionLink(@usr.Email, "UserDetails", new { id = usr.Id },
+                                            new { data_modal = "" })
                 </td>
                 <td>
                     @usr.UserName
@@ -118,9 +120,12 @@
 
 
     <div class="panel-footer">
+
+ 
+        
         Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
         @Html.PagedListPager(Model, page => Url.Action("Users2",
-    new { page, sortOrder = ViewBag.CurrentSort, searchString = ViewBag.CurrentFilter }))
+            new {page, sortOrder = ViewBag.CurrentSort, searchString = ViewBag.CurrentFilter}))
     </div>
 
 </div>

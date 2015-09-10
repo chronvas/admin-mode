@@ -1,5 +1,4 @@
-﻿body {
-  background-color: #333333;
+﻿body { 
   font-family: "Open Sans", Helvetica;
 }
 
@@ -29,21 +28,22 @@ label input {
   background-color: transparent;
   border: 0;
   border-bottom: 2px solid #4A4A4A;
-  color: white;
-  font-size: 36px;
+  color: black;
+  font-size: 25px;
   letter-spacing: -1px;
   outline: 0;
   padding: 5px 20px;
   text-align: center;
   transition: all 0.3s;
-  width: 200px;
+  width: 400px;
 }
 label input:focus {
   max-width: 100%;
-  width: 400px;
+    color: rgb(54, 54, 54);
+  width: 600px;
 }
 label input:focus + .label-text {
-  color: #F0F0F0;
+  color: whitesmoke;
   font-size: 13px;
   -moz-transform: translateY(-74px);
   -ms-transform: translateY(-74px);
@@ -71,7 +71,7 @@ button {
   transition: all 200ms;
 }
 button:hover, button:focus {
-  background-color: white;
+  background-color: whitesmoke;
   color: #333333;
   outline: 0;
 }

@@ -74,7 +74,7 @@ namespace admin_mode.Controllers
                     break;
             }
             int pageSize = 5;
-            int pageNumber = (page ?? 1);
+            int pageNumber = (page ?? 1); 
             return View(users.ToPagedList(pageNumber, pageSize));
             //return View(users.ToList());
         }
@@ -148,7 +148,7 @@ namespace admin_mode.Controllers
             }catch (Exception e){Debug.WriteLine(e);}
             if (dictionary.Count == 0) {  Debug.WriteLine("id wrong");return HttpNotFound("id wrong");}
 
-            return View(dictionary);
+            return PartialView(dictionary);
         }
 
 
@@ -704,6 +704,12 @@ namespace admin_mode.Controllers
                 Selected = allComboItemsForUser.Contains(y)
             }).ToArray();
             return null;
+        }
+
+
+        public async Task<ActionResult> ResetPassword(string id)
+        {
+            return PartialView("UserDetails");
         }
     }
 }
