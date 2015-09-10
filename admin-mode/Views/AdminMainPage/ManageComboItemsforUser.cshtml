@@ -2,7 +2,7 @@
 @using System.Collections
 @using System.Web.UI.WebControls
 @model Dictionary<string, object>
- 
+
 @{
     string id = Model["id"].ToString();
     List<SelectListItem> theList = (List<SelectListItem>)Model["selectlist"];
@@ -21,24 +21,27 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal modal-body">
-        @Html.DropDownList("ComboItems", theListIenum, new {multiple = "multiple", size = 8,type= "ComboItems" })
+        @Html.DropDownList("ComboItems", theListIenum, new { multiple = "multiple", size = 8, type = "ComboItems" })
     </div>
-    <br/>
-
-    <div class="form-group">
-        <div class="col-md-offset-8 col-md-10">
-            <input type="submit" value="Save" class="btn btn-primary" />
-            <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+    <br />
+    <div class="pull-right">
+        <div class="form-group">
+            <div class="col-md-offset-8 col-md-10">
+                <input type="submit" value="Save" class="btn btn-primary"/>
+                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
         </div>
 
+
     </div>
+<br />
 }
 
 
 
 @section scripts{
-    <script> 
-        $(function(argument) {             
+    <script>
+        $(function (argument) {
             $('#role').multiselect();
         });
     </script>

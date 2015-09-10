@@ -464,10 +464,11 @@ namespace admin_mode.Controllers
             }
             var dictionary = new Dictionary<string, object>();
             dictionary.Add("selectlist", passingRolesList);
-            dictionary.Add("id", id);
+            dictionary.Add("username", myIdentityManager.GetUserByIdentityUserId(id).UserName);
 
             IEnumerable<SelectListItem> rolesienum = myIdentityManager.AllRolesToIenumSelectListItemsForuser(id);
             dictionary.Add("ienum", rolesienum);
+            
             return PartialView(dictionary);
         }
 
@@ -480,7 +481,11 @@ namespace admin_mode.Controllers
             var user = myIdentityManager.SearchUserById(id);
             #region safety checks
             if (user == null){return HttpNotFound("User with id " + id + "not found!");}
-            if (role == null) { return HttpNotFound("ManageRolesForUser: Roles table zero"); }
+            if (role == null) //list emptied out
+            { // all roles must be removed
+                myIdentityManager.RemoveUserFromRoles(id);
+                return Json(new { success = true });
+            }
             //delete all roles form user, and add the new roles in the table 
             if (!myIdentityManager.RemoveUserFromRoles(id).Succeeded){return HttpNotFound("removeRolesError");}
             var result = false;

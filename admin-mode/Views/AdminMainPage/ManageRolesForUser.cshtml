@@ -3,7 +3,7 @@
 @model Dictionary<string, object>
 
 @{
-    string id = Model["id"].ToString();
+    string username = Model["username"].ToString();
     List<SelectListItem> theList = (List<SelectListItem>)Model["selectlist"];
     IEnumerable<SelectListItem> theListIenum = (IEnumerable<SelectListItem>)Model["ienum"];
 }
@@ -17,20 +17,18 @@
         <button type="button" class="close  " data-dismiss="modal" aria-hidden="true">
             <div class="btn btn-danger">&times;</div>
         </button>
-        <h4 class="modal-title" id="myModalLabel">Manage User's Roles</h4>
+        <h4 class="modal-title" id="myModalLabel">Manage Roles for Username: @username </h4>
     </div>
     <div class="form-horizontal modal-body">
-        @Html.DropDownList("role", theListIenum, new { multiple = "multiple", size = 8, type = "role" })
-
-    </div>
-    <br />
-    <div class="form-group">
+        @Html.DropDownList("role", theListIenum, new { multiple = "multiple", size = 8, type = "role" }) 
+    </div> 
+    <div class="pull-right">
         <div class="col-md-offset-8 col-md-10">
             <input type="submit" value="Save" class="btn btn-primary" />
             <button class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
-
     </div>
+    <br /> 
 }
 
 
