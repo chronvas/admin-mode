@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
+using System.Web.UI;
 using admin_mode.Models;
 using Microsoft.Ajax.Utilities;
 
@@ -25,6 +26,15 @@ namespace admin_mode.My_custom.Helpers
              
             return MvcHtmlString.Create(mark.ToString());
              
+        }
+
+        public static MvcHtmlString AddNewUser(this AjaxHelper ajaxHelper)
+        { 
+            var span = new TagBuilder("span");
+            span.AddCssClass("glyphicon glyphicon-plus");
+            
+            
+            return MvcHtmlString.Create(span.ToString());
         }
 
         public static MvcHtmlString DisplayComboItemsIndd(this AjaxHelper ajaxHelper, ICollection<ComboItem> comboItems)
@@ -83,7 +93,7 @@ namespace admin_mode.My_custom.Helpers
         }
 
 
-        public static MvcHtmlString NoEncodeActionLink(this HtmlHelper htmlHelper,
+        public static MvcHtmlString NoEncodeActionLink(this AjaxHelper ajaxHelper,
                                                        string text,
                                                        string title,
                                                        string action,
@@ -92,7 +102,7 @@ namespace admin_mode.My_custom.Helpers
                                                        object htmlAttributes = null)
         {
             //example @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "the title", "UserEdit", "AdminMainPage", routeValues: new { id = @Model.Id }, htmlAttributes: new { data_modal = "", @class = "btn btn-primary" }))
-            UrlHelper urlHelper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
+            UrlHelper urlHelper = new UrlHelper(ajaxHelper.ViewContext.RequestContext);
 
             TagBuilder tagBuilder  = new TagBuilder("a");
             tagBuilder.InnerHtml = text;
@@ -102,6 +112,19 @@ namespace admin_mode.My_custom.Helpers
                          HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes)));
              
             return MvcHtmlString.Create(tagBuilder.ToString());
+
+            //deuteros tropos
+            /*
+            @{
+                //actionlink made to button with bootstrap icon inside the button
+                //apo http://stackoverflow.com/questions/1547097/asp-net-mvc-how-to-include-span-in-link-from-html-actionlink
+                //
+                var link2 = Html.ActionLink("{0}", "AddNewUser", null, new { id = "AddUser", @class = "btn btn-sm bg-primary pull-right", data_modal = "" });
+                var link2S = link2.ToString();
+                var url2 = string.Format(link2S, "<span class=\"glyphicon glyphicon-plus\"> </span> New User  ");
+            }
+            @Html.Raw(url2)
+            */
         }
 
 

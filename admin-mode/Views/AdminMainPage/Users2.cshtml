@@ -35,16 +35,12 @@
                 }@*            @Html.ActionLink("Search","Users",new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })*@| @Html.ActionLink("Search", "Users2", null, new {id = "send"})
 
 
-                <div>  
-                @{  //actionlink made to button with bootstrap icon inside the button
-                    //apo http://stackoverflow.com/questions/1547097/asp-net-mvc-how-to-include-span-in-link-from-html-actionlink
-                    //
-                    var link2 = Html.ActionLink("{0}", "AddNewUser", null, new { id = "AddUser", @class = "btn btn-sm bg-primary pull-right", data_modal = "" });
-                    var link2S = link2.ToString();
-                    var url2 = string.Format(link2S, "<span class=\"glyphicon glyphicon-plus\"> </span>   New User  ");
-                }
-                @Html.Raw(url2)
-                </div>
+                <div>
+                 @Ajax.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span> New User", "Add New User", "AddNewUser", "AdminMainPage",  htmlAttributes: new { data_modal = "", @class = "btn btn-sm btn-primary pull-right" })
+                    
+                   
+
+                </div>  
                 <div class="text-warning">@Model.TotalItemCount results</div>
 
 

@@ -15,6 +15,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using admin_mode.Models;
 using admin_mode.My_custom;
+using admin_mode.My_custom.Helpers;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -554,7 +555,6 @@ namespace admin_mode.Controllers
         {
 
             AddNewUserViewModel addNewUserViewModel = new AddNewUserViewModel();
-
             return PartialView(addNewUserViewModel);
         }
 
