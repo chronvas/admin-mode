@@ -1,6 +1,7 @@
 ﻿@using System.Globalization
 @using System.Web.UI.WebControls
 @using admin_mode.My_custom.Helpers
+@using PagedList
 @using PagedList.Mvc;
 @model PagedList.IPagedList<admin_mode.Models.ApplicationUser>
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
@@ -69,8 +70,7 @@
             <tr>
                 <td>
                     @*                    @Html.ActionLink(@usr.Email, "UserDetails", new { id = usr.Id })*@
-                    @Html.ActionLink(@usr.Email, "UserDetails", new { id = usr.Id },
-                                            new { data_modal = "" })
+                    @Html.ActionLink(@usr.Email, "UserDetails", new { id = usr.Id },new { data_modal = "" })
                 </td>
                 <td>
                     @usr.UserName
@@ -117,11 +117,12 @@
 
     <div class="panel-footer">
 
- 
         
         Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-        @Html.PagedListPager(Model, page => Url.Action("Users2",
-            new {page, sortOrder = ViewBag.CurrentSort, searchString = ViewBag.CurrentFilter}))
+        @Html.PagedListPager(Model, //takes users an IPagedList of users
+                            page => Url.Action("Users2",new {page, sortOrder = ViewBag.CurrentSort, searchString = ViewBag.CurrentFilter}),  //navigation
+                            new PagedListRenderOptions(){MaximumPageNumbersToDisplay = 5} //maximum number of pages, then ... is added
+                            )  
     </div>
 
 </div>
