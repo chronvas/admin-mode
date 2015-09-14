@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.IdentityModel.Metadata;
@@ -10,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using System.Web.Security;
 using System.Xml;
 using System.Xml.Serialization;
@@ -19,6 +21,7 @@ using admin_mode.My_custom.Helpers;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Newtonsoft.Json;
 using PagedList;
 
 namespace admin_mode.Controllers
@@ -26,8 +29,13 @@ namespace admin_mode.Controllers
     public class AdminMainPageController : Controller
     {
         // GET: AdminMainPage
+        [Authorize(Roles = "Global Admin")]
         public ActionResult Index()
         {
+            if (Request.ContentType == "application/json")
+            { //this will return a json (or whatever we want) if in the Header of the request the Content-type is application/jsonn
+                return Json("some crazy object here", JsonRequestBehavior.AllowGet);
+            }
             AdminMainPageModels model = new AdminMainPageModels();
             Debug.WriteLine(model.TotalUsers);
             return View(model);
