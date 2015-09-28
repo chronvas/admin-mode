@@ -576,15 +576,12 @@ namespace admin_mode.Controllers
         {
             MyIdentityManager myIdentityManager = new MyIdentityManager();
 
-            var ax = addNewUserViewModel.ComboItems;
             if (!ModelState.IsValid)
             {//if the modelstate is not valid, pass the errors to a string, and display via httpnotfount. Not the best way, but works
                 #region error reporting
                 var modelStateerrors = ModelState.Where(x => x.Value.Errors.Count > 0)
                     .Select(x => new { x.Key, x.Value.Errors }).ToArray();
                 string errorList = "";
-                var vasdvasd = modelStateerrors.Count();
-                var va3sdvasd = modelStateerrors.Length;
                 
 
                 if (modelStateerrors !=null)

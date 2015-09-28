@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace System.Web.Mvc.Html
 {
+    delegate int del(int i);
     public static partial class HtmlHelpers
     {
         /// <summary>
@@ -20,7 +23,22 @@ namespace System.Web.Mvc.Html
         public static MvcHtmlString BootstrapSelectFor<TModel, TValue>(this HtmlHelper<TModel> self, Expression<Func<TModel, TValue>> expression, Dictionary<string, string> values, [Optional, DefaultParameterValue(false)] bool blank, [Optional] params string[] events)
         {
             var metadata = ModelMetadata.FromLambdaExpression(expression, self.ViewData);
+            //tests
+            //del myDelegate =    x => x * x;
+            //myDelegate = x => x - 1;
+             
+            //var j = myDelegate(3);
+            
+            //Expression<del> et = x => x*x + 3;
 
+            //Func<int, bool> myFunc = x => x == 5;
+
+            //int[] d = new[] {3, 4, 5};
+            //d.TakeWhile(r => r < 3);
+            //bool m3 = myFunc(3);
+            //bool m5 = myFunc(5);
+            
+            //end tests       
             // Creates the select tag.
             var select = new TagBuilder("select");
 
@@ -81,7 +99,7 @@ namespace System.Web.Mvc.Html
         {
             // Converts the value from string to Dictionary.
             var dict = new Dictionary<string, string>();
-
+            
             // Split the string.
             var valuesArray = values.Replace(" ,", ",").Replace(", ", ",").Split(',');
 

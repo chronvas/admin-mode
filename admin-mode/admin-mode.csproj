@@ -205,7 +205,6 @@
     <Compile Include="Models\ComboItem.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\SelectList.cs" />
     <Compile Include="My custom\Helpers\MyHelper.cs" />
     <Compile Include="My custom\MyComboItemManager.cs" />
     <Compile Include="My custom\MyIdentityManager.cs" />
