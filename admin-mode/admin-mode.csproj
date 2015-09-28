@@ -387,6 +387,7 @@
     <Content Include="Views\AdminMainPage\AddUser.cshtml" />
     <Content Include="Views\AdminMainPage\AddNewUser.cshtml" />
     <Content Include="Views\AdminMainPage\ManageComboItemsforUser.cshtml" />
+    <Content Include="Views\AdminMainPage\DeleteUser.cshtml" />
     <None Include="Views\AdminMainPage\Users.cshtml" />
     <Content Include="Views\AdminMainPage\UserEdit.cshtml" />
     <Content Include="Views\Shared\CustomError.cshtml" />

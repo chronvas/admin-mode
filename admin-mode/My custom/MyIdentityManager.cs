@@ -24,7 +24,7 @@ namespace admin_mode.My_custom
         private ApplicationSignInManager _signInManager;
         private DpapiDataProtectionProvider protectionProvider;
         private ClaimsAuthenticationManager aclaimsauthenticationmanager;
-
+        
         public MyIdentityManager()
         {
             _dbContext = new ApplicationDbContext();
@@ -61,6 +61,15 @@ namespace admin_mode.My_custom
             var allRoles = _roleManager.Roles.ToList();
             var rrx = allRoles.Select(role => role.Name);
             return rrx.ToList();
+            
+        }
+
+        public void Dispose()
+        {
+            if (this._dbContext!=null)this._dbContext.Dispose();
+            if (this._roleManager!=null)this._roleManager.Dispose();
+            if(this._userManager!=null)this._userManager.Dispose();
+            if (this._signInManager!=null)this.SignInManager.Dispose();
             
         }
         public bool CreateNewUserRole(string role)

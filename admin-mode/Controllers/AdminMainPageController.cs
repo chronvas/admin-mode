@@ -28,6 +28,7 @@ namespace admin_mode.Controllers
 {
     public class AdminMainPageController : Controller
     {
+        #region Index
         // GET: AdminMainPage
         [Authorize(Roles = "Global Admin")]
         public ActionResult Index()
@@ -40,7 +41,9 @@ namespace admin_mode.Controllers
             Debug.WriteLine(model.TotalUsers);
             return View(model);
         }
+        #endregion index
 
+        #region Users (palio)
         [Authorize(Roles = "Global Admin")]
         public ActionResult Users(string sortOrder, string currentFilter,string searchString, int? page)
         {
@@ -87,7 +90,9 @@ namespace admin_mode.Controllers
             return View(users.ToPagedList(pageNumber, pageSize));
             //return View(users.ToList());
         }
+        #endregion Users (palio)
 
+        #region Users2
         [Authorize(Roles = "Global Admin")]
         public ActionResult Users2(string sortOrder, string currentFilter, string searchString, int? page)
         { 
@@ -134,7 +139,9 @@ namespace admin_mode.Controllers
             return View(users.ToPagedList(pageNumber, pageSize));
             //return View(users.ToList());
         }
+        #endregion Users2
 
+        #region UserDetails 
         // GET: AdminMainPage/User/5 
         [Authorize(Roles = "Global Admin")]
         public ActionResult UserDetails(string id)
@@ -159,27 +166,43 @@ namespace admin_mode.Controllers
 
             return PartialView(dictionary);
         }
+        #endregion Users2
 
-
-        // GET: AdminMainPage/UsersToXml
-        [Route("UsersToXml")] 
-        public ActionResult UsersToXml( )
-        { 
-            string xml = "<?xml version = \"1.0\" encoding= \"utf-8\"?>";
+        #region DeleteUser
+        //GET: AdminMainPage/DeleteUser/5
+        [Authorize(Roles = "Global Admin")]
+        [HttpGet]
+        public ActionResult DeleteUser(string id)
+        {
+            if (id.IsNullOrWhiteSpace())
+                return HttpNotFound("id IsNullOrWhiteSpace!");
+            
             MyIdentityManager myIdentityManager = new MyIdentityManager();
-            var users = myIdentityManager.GetAllUsers();
-            xml = xml + "<Users>";
-            foreach (var user in users)
-            {
-                xml = xml + "<Name>";
-                xml = xml + user.Id;
-                xml = xml + "</Name>";
-            }
-            xml = xml + "</Users>";
+            var user = myIdentityManager.GetUserByIdentityUserId(id);
+            myIdentityManager.Dispose();
+            
+            return PartialView(user);
+        }
 
-            return Content(xml, "text/xml");
-        } 
-
+        //POST: AdminMainPage/DeleteUser/5
+        [Authorize(Roles = "Global Admin")]
+        [HttpPost]
+        public ActionResult DeleteUser(string id, FormCollection collection)
+        {
+            if (id.IsNullOrWhiteSpace())
+                return HttpNotFound("id IsNullOrWhiteSpace!");
+            
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+            var user = myIdentityManager.GetUserByIdentityUserId(id);
+            var result = myIdentityManager.DeleteMemberShipUser(user);
+            if (result.Succeeded)
+                return Json(new { success = true });
+            else
+                return HttpNotFound("Error deleting user");
+        }
+#endregion
+        
+        #region UserEdit
         //PALIO
         // GET: AdminMainPage/UserEdit/5
         [Authorize(Roles = "Global Admin")]
@@ -219,7 +242,10 @@ namespace admin_mode.Controllers
             myIdentityManager.UpdateUser(user);
             return RedirectToAction("Users");
         }
-         
+
+        #endregion UserEdit
+
+        #region DeleteRoleFromUser
         //PALIO
         // GET: AdminMainPage/DeleteRoleFromUser/5
         [Authorize(Roles = "Global Admin")]
@@ -256,7 +282,9 @@ namespace admin_mode.Controllers
                 return View();
             }   
         }
+        #endregion DeleteRoleFromUser
 
+        #region AddNewRoleToUser (palio)
         [Authorize(Roles = "Global Admin")]
         //PALIO
         //Get: AdminMainPage/AddNewRoleToUser 
@@ -312,9 +340,9 @@ namespace admin_mode.Controllers
             return HttpNotFound("AddNewRoleToUser: Error addint role: " + role + " to user with id " + id);
 
         }
+        #endregion AddNewRoleToUser 
 
-
-
+        #region UserEdit2
         // GET: AdminMainPage/UserEdit2/5
         [Authorize(Roles = "Global Admin")]
         public async Task<ActionResult> UserEdit2(string id)
@@ -339,7 +367,6 @@ namespace admin_mode.Controllers
              
             var I2 = myComboItemManager.GetAllRolesForUserIdToIenumSelectListItem(id);
             
-
             dictionary.Add("ienum", I2);
             dictionary.Add("applicationUser", user);
 
@@ -389,10 +416,12 @@ namespace admin_mode.Controllers
                 myComboItemManager.DisposeAll();
                 return Json(new { success = true });
             }
-            return PartialView("Users2");
+            return HttpNotFound("Not Valid mod");
         }
 
+        #endregion UserEdit2
 
+        #region AddNewRoleToUser2
         [Authorize(Roles = "Global Admin")]
         //GET: AdminMainPage/AddNewRoleToUser2
         //it will present a list of available roles for the user to be added to \
@@ -454,6 +483,9 @@ namespace admin_mode.Controllers
 
         }
 
+        #endregion AddNewRoleToUser2
+
+        #region ManageRolesForUser
         [Authorize(Roles = "Global Admin")]
         //Get: AdminMainPage/ManageRolesForUser
         //it will manage the roles. 
@@ -518,6 +550,9 @@ namespace admin_mode.Controllers
  
         }
 
+        #endregion ManageRolesForUser
+
+        #region AddUser
         //GET: AdminMainPage/AddUser
         public async Task<ActionResult> AddUser()
         { 
@@ -555,9 +590,10 @@ namespace admin_mode.Controllers
             myIdentityManager.CreateNewUser(newUser, hp);
             return Json(new { success = true });
         }
-        
-        
-        
+
+        #endregion AddUser
+
+        #region AddNewUser
         //GET: AdminMainPage/AddUser
         public async Task<ActionResult> AddNewUser()
         {
@@ -639,8 +675,9 @@ namespace admin_mode.Controllers
                 return HttpNotFound("User data not valid, please try again");
             }
         }
+        #endregion AddNewUser
 
-
+        #region ManageComboItemsforUser
         public async Task<ActionResult> ManageComboItemsforUser(string id)
         {
             if (id.IsNullOrWhiteSpace()) { return HttpNotFound("id null or whitespace"); }
@@ -700,6 +737,29 @@ namespace admin_mode.Controllers
             } 
             return HttpNotFound("AddNewRoleToUser: Error adding role: " + " to user with id " + id); 
         }
+
+        #endregion ManageComboItemsforUser
+
+#region APIs
+        // GET: AdminMainPage/UsersToXml
+        [Route("UsersToXml")]
+        public ActionResult UsersToXml()
+        {
+            string xml = "<?xml version = \"1.0\" encoding= \"utf-8\"?>";
+            MyIdentityManager myIdentityManager = new MyIdentityManager();
+            var users = myIdentityManager.GetAllUsers();
+            xml = xml + "<Users>";
+            foreach (var user in users)
+            {
+                xml = xml + "<Name>";
+                xml = xml + user.Id;
+                xml = xml + "</Name>";
+            }
+            xml = xml + "</Users>";
+
+            return Content(xml, "text/xml");
+        }
+#endregion APIs
 
         //mockup. Not for use.
         public ActionResult ChooseRolePartial(string username)

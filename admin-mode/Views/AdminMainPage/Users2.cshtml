@@ -102,11 +102,15 @@
                             <span class="glyphicon   glyphicon-user"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li>@Html.ActionLink("View Details", "UserDetails", new {id = usr.Id})</li>
+                            <li>@Html.ActionLink("View Details", "UserDetails", new {id = usr.Id}, 
+                               new { data_modal = "" })</li>
                         </ul>
                     </div>
-                    
-                    
+                     
+                    @Ajax.NoEncodeActionLink("<span class='glyphicon glyphicon-trash'></span>", "Delete User", "DeleteUser",
+                                             "AdminMainPage", htmlAttributes: new { data_modal = "", @class = "btn btn-xs btn-danger" },routeValues: new { id = usr.Id })
+
+
 
                 </td>
 
