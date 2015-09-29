@@ -199,6 +199,14 @@
     <Compile Include="Migrations\201509021628586_combobox.Designer.cs">
       <DependentUpon>201509021628586_combobox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509290949495_ADDED_ADDRESS.cs" />
+    <Compile Include="Migrations\201509290949495_ADDED_ADDRESS.Designer.cs">
+      <DependentUpon>201509290949495_ADDED_ADDRESS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509291011362_whatthefuckhappenednow.cs" />
+    <Compile Include="Migrations\201509291011362_whatthefuckhappenednow.Designer.cs">
+      <DependentUpon>201509291011362_whatthefuckhappenednow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminMainPageModels.cs" />
@@ -413,6 +421,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509021628586_combobox.resx">
       <DependentUpon>201509021628586_combobox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509290949495_ADDED_ADDRESS.resx">
+      <DependentUpon>201509290949495_ADDED_ADDRESS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509291011362_whatthefuckhappenednow.resx">
+      <DependentUpon>201509291011362_whatthefuckhappenednow.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

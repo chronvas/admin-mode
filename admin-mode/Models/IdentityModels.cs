@@ -21,7 +21,7 @@ namespace admin_mode.Models
             return userIdentity;
             
         }
-
+        public virtual string Address { get; set; }
         public DateTime EnrollmentDate { get; set; }
         public virtual ICollection<ComboItem> ComboItems { get; set; }
     }

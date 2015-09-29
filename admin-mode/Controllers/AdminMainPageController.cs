@@ -367,7 +367,8 @@ namespace admin_mode.Controllers {
                        "PhoneNumber,PhoneNumberConfirmed," +
                        "TwoFactorEnabled,LockoutEnabled," +
                        "AccessFailedCount,UserName," +
-                       "LockoutEndDateUtc,ComboItems")]
+                       "Address," +
+                       "LockoutEndDateUtc,ComboItems,")]
                                         ApplicationUser applicationUser , string[] ComboItems) {
             if (ModelState.IsValid) {
                 MyIdentityManager myIdentityManager = new MyIdentityManager();
@@ -379,6 +380,7 @@ namespace admin_mode.Controllers {
 
                 userEdited.EnrollmentDate = applicationUser.EnrollmentDate;
                 userEdited.Email = applicationUser.Email;
+                userEdited.Address = applicationUser.Address;
                 userEdited.EmailConfirmed = applicationUser.EmailConfirmed;
                 userEdited.PhoneNumber = applicationUser.PhoneNumber;
                 userEdited.PhoneNumberConfirmed = applicationUser.PhoneNumberConfirmed;
@@ -535,7 +537,7 @@ namespace admin_mode.Controllers {
         public async Task<ActionResult> AddUser(
             [Bind(
                 Include =
-                    "EnrollmentDate,Email,Id,EmailConfirmed,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnabled,AccessFailedCount,UserName"
+                    "EnrollmentDate,Email,Id,EmailConfirmed,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnabled,AccessFailedCount,UserName,Address"
                 )] ApplicationUser applicationUser) {
             // id system
             //
@@ -545,6 +547,7 @@ namespace admin_mode.Controllers {
 
             newUser.EnrollmentDate = applicationUser.EnrollmentDate;
             newUser.Email = applicationUser.Email;
+            newUser.Address = applicationUser.Address;
             newUser.EmailConfirmed = applicationUser.EmailConfirmed;
             //newUser.PhoneNumber = applicationUser.PhoneNumber;
             //newUser.PhoneNumberConfirmed = applicationUser.PhoneNumberConfirmed;
@@ -577,7 +580,7 @@ namespace admin_mode.Controllers {
             [Bind(
                 Include =
                     "Email,Password,UserName,EnrollmentDate,PhoneNumber,PhoneNumberConfirmed" +
-                    ",TwoFactorEnabled,LockoutEnabled,LockoutEndDateUtc,AccessFailedCount,EmailConfirmed,ComboItemsStrTable"
+                    ",TwoFactorEnabled,Address,LockoutEnabled,LockoutEndDateUtc,AccessFailedCount,EmailConfirmed,ComboItemsStrTable"
                 )] AddNewUserViewModel addNewUserViewModel) {
             MyIdentityManager myIdentityManager = new MyIdentityManager();
 
@@ -603,6 +606,7 @@ namespace admin_mode.Controllers {
             var user = new ApplicationUser {
                 Email = addNewUserViewModel.Email ,
                 UserName = addNewUserViewModel.Email ,
+                Address = addNewUserViewModel.Address ,
                 EnrollmentDate = addNewUserViewModel.EnrollmentDate ?? temp ,  //if the user leaves that blank, fill it with datetime.now
                 PhoneNumber = addNewUserViewModel.PhoneNumber ,
                 PhoneNumberConfirmed = addNewUserViewModel.PhoneNumberConfirmed ,

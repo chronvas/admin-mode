@@ -61,6 +61,9 @@ namespace admin_mode.Models
         [Display(Name = "Enrollment Date")]
         public virtual DateTime? EnrollmentDate { get; set; }
 
+        [Display(Name = "Address")]
+        public virtual string Address { get; set; }
+        
         [Display(Name = "Phone Number")]
         public virtual string PhoneNumber { get; set; }
 
